@@ -1,1 +1,21 @@
-exclude: ['README.md']
+# Permalinks
+#
+permalink:           pretty
+
+# Setup
+title:               Dinamite Toolkit
+description:         'Documentation for dinamite-toolkit'
+url:                 https://dinamite-toolkit.github.io/
+baseurl:             ''
+gems:                [jekyll-paginate]
+paginate:            5
+paginate_path:       "page:num"
+
+# About/contact
+author:
+  name:              
+  url:               
+  email:             
+
+# Custom vars
+version:             1.0.0
