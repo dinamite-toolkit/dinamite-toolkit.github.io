@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Example content
-permalink: example-content/
 ---
 
 
