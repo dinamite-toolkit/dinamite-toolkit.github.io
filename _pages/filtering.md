@@ -61,6 +61,7 @@ It is stored in JSON format and looks something like this:
 ```
 
 The top level objects in the filter JSON specification are:
+
 - `minimum_function_size` (integer) - Anything below this size (in specified units, see next) will **not** be instrumented.
 - `function_size_metric` - Can have three different values: `IR`, `LOC` and `LOC_PATH`. This tells the compiler what metric we would like to use for size-based
     filtering. Respectively, the three metrics are: number of LLVM IR instructions, total number of lines of code in a function and
@@ -74,6 +75,7 @@ Any field that calls for naming an entity in the code allows for simple globbing
 ## Whitelisting and blacklisting
 
 Whitelist and blacklist entries have a priority ordering as follows:
+
 - Everything that is in the blacklist will **automatically** get ignored.
 - If the whitelists are empty, everything is instrumented.
 - As soon as anything is specified in the whitelist, everything else is ignored
@@ -91,7 +93,7 @@ that get passed.
 
 In order to tell DINAMITE about the function filters, at the time you compile your program with DINAMITE, you will need to set the environment variable `DIN_FILTERS` to point to the JSON document, like so:
 
-DIN_FILTERS="/path/to/function_filter.json" make -j 4
+`DIN_FILTERS="/path/to/function_filter.json" make -j 4`
 
 If you don't set `DIN_FILTERS`, DINAMITE assumes that you want to instrument all the events in your program. **It is safest to provide the full path of the `function_filters.json` file.** If you are building a complex project the build might be performed in multiple directories. If only the top-level directory has the filters file, the files in the other directories will not be filtered correctly.
 
