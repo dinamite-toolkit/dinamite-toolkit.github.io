@@ -17,7 +17,6 @@ Once you have the repository in a local directory, navigate to it and run the fo
 ```
 $ ./get_tarballs.sh     ## download LLVM sources
 $ docker build .        ## build docker in the current dir
-
 ```
 
 Sit back and relax while docker downloads a base image and builds LLVM with DINAMITE in it.
