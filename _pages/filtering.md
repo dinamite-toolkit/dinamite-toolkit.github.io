@@ -2,7 +2,8 @@
 layout: page
 permalink: filtering/
 ---
-#Instrumentation filtering
+
+# Instrumentation filtering
 
 By default DINAMITE will instrument every memory access in your program. However, often you only want to instrument parts of the code, and not all memory accesses, but simply function entry/exit timestamps. 
 
