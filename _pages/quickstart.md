@@ -45,6 +45,7 @@ With these environment variables at your disposal, building a single source file
 ```
 ${DIN_CC} ${DIN_LDFLAGS} main.c
 ```
+
 ## DINAMITE output
 
 The default build setup in our Docker container builds DINAMITE with a binary format logging library.
