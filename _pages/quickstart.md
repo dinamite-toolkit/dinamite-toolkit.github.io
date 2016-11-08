@@ -13,6 +13,7 @@ big, so make sure you have some free space on your machine (in our experience ~2
 basic use cases).
 
 Once you have the repository in a local directory, navigate to it and run the following:
+
 ```
 $ ./get_tarballs.sh     ## download LLVM sources
 $ docker build .        ## build docker in the current dir
@@ -41,6 +42,7 @@ directly translate into variables used by build systems:
     an alternative would be copying libinstrumentation.so to a system-wide shared object path
 
 With these environment variables at your disposal, building a single source file boils down to:
+
 ```
 ${DIN_CC} ${DIN_LDFLAGS} main.c
 ```
