@@ -6,7 +6,7 @@ permalink: /home/
 
 **DINAMITE compiler pass is available on [GitHub](https://github.com/dinamite-toolkit/dinamite)**
 
-If you want to try it out, the best thing to do is click on [Quick Start](quickstart/) above and
+If you want to try it out, the best thing to do is click on [Quick Start](https://dinamite-toolkit.github.io/quickstart/) above and
 follow the instructions.
 
 <br>
