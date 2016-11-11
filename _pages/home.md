@@ -37,10 +37,6 @@ toolkit.
 You don't need all the access information? Head over to our Instrumentation Filtering *link*
 page, where you can learn how to selectively instrument only the things you're interested in.
 
-If the logs are getting too big for your storage system, you can use the binary TCP output
-to send them into an instance of Spark Streaming (or your stream processing engine of choice,
-with some fiddling) and process them online without having to store massive traces.
-
-In our *link* blog we will write about case studies, new tools we develop and interesting
+In our [Technical Articles](https://dinamite-toolkit.github.io/tech-articles/) section we will write about case studies, new tools we develop and interesting
 findings.
 
