@@ -1,6 +1,6 @@
 ---
 layout: page
-permalink: /
+permalink: /home/
 ---
 # DINAMITE toolkit
 
