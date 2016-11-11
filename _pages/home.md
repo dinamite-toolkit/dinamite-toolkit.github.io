@@ -9,6 +9,8 @@ permalink: /home/
 If you want to try it out, the best thing to do is click on [Quick Start](quickstart/) above and
 follow the instructions.
 
+<br>
+
 DINAMITE toolkit is an ecosystem of tools for program analysis revolving 
 around a powerful instrumentation pass written for the LLVM compiler 
 infrastructure.
