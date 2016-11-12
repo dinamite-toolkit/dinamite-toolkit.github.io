@@ -16,6 +16,7 @@ This page is intended to help users leverage all the features of DINAMITE.
 
 #### [Logging libraries](#logging-libraries)
 
+#### [Allocator definitions](#alloc-defs)
 <hr>
 
 # <a name="instrumentation-filtering"></a> Instrumentation filtering 
@@ -263,7 +264,7 @@ void logAccessI64(void *ptr, uint64_t value, int type, int file, int line, int c
 `logAccess*` are called when instrumenting appropriate memory accesses.
 
 
-# Allocator definitions
+# <a name="alloc-defs"></a> Allocator definitions
 
 Different programs use different memory allocation libraries. In order to be able to recognize
 and instrument allocations in your software, DINAMITE uses a special configuration file.
