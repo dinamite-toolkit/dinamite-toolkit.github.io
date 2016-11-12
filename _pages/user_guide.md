@@ -1,9 +1,23 @@
 ---
 layout: page
-permalink: filtering/
+permalink: user-guide/
 ---
+# User Guide
 
-# Instrumentation filtering
+This page is intended to help users leverage all the features of DINAMITE.
+
+## Contents
+
+#### [Instrumentation filtering](#instrumentation-filtering)
+
+#### [Log format](#log-format)
+
+#### [String maps](#string-maps)
+
+
+<hr>
+
+# <a name="instrumentation-filtering"></a> Instrumentation filtering 
 
 By default DINAMITE will instrument every memory access in your program. However, often you only want to instrument parts of the code, and not all memory accesses, but simply function entry/exit timestamps. 
 
@@ -98,3 +112,81 @@ In order to tell DINAMITE about the function filters, at the time you compile yo
 If you don't set `DIN_FILTERS`, DINAMITE assumes that you want to instrument all the events in your program. **It is safest to provide the full path of the `function_filters.json` file.** If you are building a complex project the build might be performed in multiple directories. If only the top-level directory has the filters file, the files in the other directories will not be filtered correctly.
 
 With C++ code, function names are typically mangled. To find a real function name, run compilation once. The filtering tool will output `function_sizes.json` which will contain the names of all encountered functions and their respective sizes (defaults to LOC_PATH metric). You can use these to fill your filter list properly.
+
+# <a name="log-format"></a> Log format
+
+DINAMITE's log format is not enforced. If you don't like the way it is,
+writing a new logging library takes very little effort! If you do that,
+we'd love to hear how you did it and why!
+
+The default implementation in the binary logging library differentiates
+between three types of events: function, allocation and access.
+This is, in fact, all the event types that are available from DINAMITE.
+When you instrument a program, the compiler adds calls to external logging
+functions in the appropriate places and passes them all the relevant information.
+
+(You can follow along by opening `<dinamite_root>/library/binaryinstrumentation.h` )
+
+All three log event types are encased in a union which contains a field to identify the event type.
+
+All three log event types also have a shared field called `thread_id` which, as you've
+already guessed, contains the ID of the thread the event happened on. This is the only field
+that doesn't come from DINAMITE's compiler (not available at compile time). The implementation
+in `binaryinstrumentation.h` can be used for reference if you want to make a new 
+thread-aware logging implementation..
+
+The following field descriptions will omit the `thread_id` field, so don't get confused, it's still
+there.
+
+## Function events
+
+These events contain the type of event (`fn_event_type`) which can have a value of either `FN_BEGIN` or `FN_END` (defined in the same file) and the ID of the function (see string maps).
+
+## Allocation events
+
+Allocation events are described with the code location of where the allocation
+happened and information about the type, size and number of allocated elements.
+They also contain the address of the beginning of the allocated memory region.
+
+The field `size` is expressed in bytes.
+
+The `type` and `file` fields are string IDs, which will correspond with the emitted
+JSON string maps.
+
+## Access events
+
+Access events each describe a single memory access.
+
+They contain the pointer to the accessed memory location (`ptr`), value - encoded as a union
+of all possible primitive types, type of access ('r' for reads, 'w' for writes, and 'a' for
+special argument logging events), three fields for code location, type of accessed data and
+the name of the variable (both corresponding to the string maps).
+
+Variable names can pertain to single scalar variables, in which case, their name in the maps
+will be whatever is visible to LLVM in its IR. Besides that, they can be fields of a complex
+data type (classes or structs), in which case, their name will be of the format "ClassName.fieldName".
+
+In our experience, this is the most meaningful way to encode variable name information.
+
+# <a name="string-maps"></a> String maps
+
+In order to keep the size of logs as small as possible, DINAMITE encodes all strings encountered
+while instrumenting as integer IDs. All strings fall into one of the 4 categories: type,
+variable, function and file names.
+When compiling, DINAMITE stores these string to integer mappings in 4 JSON files.
+
+The default location of these files is the current build directory. This, however,
+means that build systems in which the compiler is invoked from different locations
+will store maps in multiple directories. **This is incorrect behaviour**, because
+DINAMITE relies on reading the state of these maps from the previous invocations.
+To avoid this problem, when invoking the build, provide the path in which to store
+string maps as `$DIN_MAPS` like so:
+
+```
+DIN_MAPS=/path/to/maps make
+```
+
+After the build, `/path/to/maps` will contain 4 files: `map_sources.json`, `map_functions.json`,
+`map_types.json` and `map_variables.json`, each containing string to integer ID mappings
+for its respective string category.
+
