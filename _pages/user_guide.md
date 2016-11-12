@@ -23,7 +23,7 @@ This page is intended to help users leverage all the features of DINAMITE.
 By default DINAMITE will instrument every memory access in your program. However, often you only want to instrument parts of the code, and not all memory accesses, but simply function entry/exit timestamps. 
 
 In order to instrument only parts of your code, and specific events, DINAMITE supports function filtering.
-To leverage this, you need to provide a filter file. The filter basically works as a white list for functions that are allowed to be instrumented.
+To leverage this, you need to provide a filter file. The filter basically works as a configuration for functions that are allowed to be instrumented.
 It is stored in JSON format and looks something like this:
 
 ```
