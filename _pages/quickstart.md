@@ -2,11 +2,11 @@
 layout: page
 permalink: quickstart/
 ---
-# Quickstart
+# Quick start
 
 ## Setting up
 
-If you want to try DINAMITE out quickly, your best option is to grab our Docker.io container recipes at *link here*.
+If you want to try DINAMITE out quickly, your best option is to grab our Docker.io container recipes **[here](https://github.com/dinamite-toolkit/dinamite-compiler-docker)**
 
 To build the Docker container, clone the repository locally. The final image will be around 5GB, and traces can get
 big, so make sure you have some free space on your machine (in our experience ~20GB free space is usually enough for
@@ -51,7 +51,7 @@ ${DIN_CC} ${DIN_LDFLAGS} main.c
 The default build setup in our Docker container builds DINAMITE with a binary format logging library.
 This library will get linked with the instrumented executable at runtime, and will output one file per
 thread of execution. These files will contain logs made up of plain C structures (defined in 
-${INST_LIB}/binaryinstrumentation.h) reflecting the sequence of events in the execution.
+`${INST_LIB}/binaryinstrumentation.h`) reflecting the sequence of events in the execution.
 
 To process these logs into a human readable format, or perform any filtering or analysis on them,
 you can use our binary trace analysis toolkit (*link_here*).

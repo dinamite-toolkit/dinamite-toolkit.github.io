@@ -6,7 +6,7 @@ permalink: /
 
 **DINAMITE compiler pass is available on [GitHub](https://github.com/dinamite-toolkit/dinamite)**
 
-If you want to try it out, the best thing to do is click on [Quick Start](https://dinamite-toolkit.github.io/quickstart/) above and
+If you want to try it out, the best thing to do is click on [Quick Start](/quickstart/) above and
 follow the instructions.
 
 <br>
@@ -37,6 +37,6 @@ toolkit.
 You don't need all the access information? Head over to our Instrumentation Filtering *link*
 page, where you can learn how to selectively instrument only the things you're interested in.
 
-In our [Technical Articles](https://dinamite-toolkit.github.io/tech-articles/) section we will write about case studies, new tools we develop and interesting
+In our [Technical Articles](/tech-articles/) section we will write about case studies, new tools we develop and interesting
 findings.
 

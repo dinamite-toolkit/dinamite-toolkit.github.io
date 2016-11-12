@@ -4,7 +4,7 @@ permalink:           pretty
 
 # Setup
 title:               Dinamite Toolkit
-description:         'Documentation for dinamite-toolkit'
+description:         'Home of DINAMITE<br>the LLVM instrumentation toolkit'
 url:                 https://dinamite-toolkit.github.io/
 baseurl:             ''
 gems:                [jekyll-paginate]
