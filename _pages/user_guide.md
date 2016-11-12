@@ -14,6 +14,7 @@ This page is intended to help users leverage all the features of DINAMITE.
 
 #### [String maps](#string-maps)
 
+#### [Logging libraries](#logging-libraries)
 
 <hr>
 
@@ -189,4 +190,76 @@ DIN_MAPS=/path/to/maps make
 After the build, `/path/to/maps` will contain 4 files: `map_sources.json`, `map_functions.json`,
 `map_types.json` and `map_variables.json`, each containing string to integer ID mappings
 for its respective string category.
+
+# <a name="logging-libraries"></a> Logging libraries
+
+DINAMITE's compiler instruments events in the code it compiles with function calls.
+These function calls are directed at external functions which will, in the end,
+be located in `libinstrumentation.so`.
+
+This design lets us keep the instrumenting compiler decoupled from the actual logging
+implementation, and makes implementing new output libraries very easy.
+
+If you want to make a new logging library (example: send all events into a database),
+all you have to do is implement a handful of functions.
+In the root of our compiler project repo, you will find a `library/` directory. This directory
+contains a couple of default logging library implementations, which can be used as is,
+or as templates for your own implementations.
+
+When running instrumented binaries, you have to make sure that `libinstrumentation.so` is built
+(go to `library/` and run `make binary`, for example) and that it is in your
+library path for the run.
+
+## Making a new logging library
+
+If you want to make a new logging library, you need to add an entry to the Makefile in `library/`.
+Let's assume the code for your library is in `fooinstrumentation.c`. You would add someting like this
+to the make file:
+
+```
+foo: fooinstrumentation.o dinamite_time.o
+	make bitcode
+	$(CC) -shared -o libinstrumentation.so $^
+```
+
+You would build this logging library by invoking
+
+```
+make foo
+```
+
+In the actual implementation, you have to worry about implementing the following functions:
+
+{% highlight c %}
+void logInit(int functionId)
+
+void logExit(int functionId)
+
+void logFnBegin(int functionId)
+
+void logFnEnd(int functionId)
+
+void logAlloc(void *addr, uint64_t size, uint64_t num, int type, int file, int line, int col)
+
+void logAccessPtr(void *ptr, void *value, int type, int file, int line, int col, int typeId, int varId)
+
+void logAccessStaticString(void *ptr, void *value, int type, int file, int line, int col, int typeId, int varId)
+
+void logAccessI8(void *ptr, uint8_t value, int type, int file, int line, int col, int typeId, int varId)
+
+void logAccessI16(void *ptr, uint16_t value, int type, int file, int line, int col, int typeId, int varId)
+
+void logAccessI32(void *ptr, uint32_t value, int type, int file, int line, int col, int typeId, int varId)
+
+void logAccessI64(void *ptr, uint64_t value, int type, int file, int line, int col, int typeId, int varId)
+{% endhighlight %}
+
+`logInit` and `logExit` will get called at the start of `main()` (or global ctors in C++) and end of `main()` (or before calls to `exit()`), respectively.
+
+`logFnBegin` and `logFnEnd` are called at the start and end of the function with the given ID.
+
+`logAlloc` is called at every allocation.
+
+`logAccess*` are called when instrumenting appropriate memory accesses.
+
 
