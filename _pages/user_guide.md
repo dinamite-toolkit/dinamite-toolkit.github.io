@@ -263,3 +263,36 @@ void logAccessI64(void *ptr, uint64_t value, int type, int file, int line, int c
 `logAccess*` are called when instrumenting appropriate memory accesses.
 
 
+# Allocator definitions
+
+Different programs use different memory allocation libraries. In order to be able to recognize
+and instrument allocations in your software, DINAMITE uses a special configuration file.
+
+By default, DINAMITE will look for this configuration as `alloc.in` in the current directory.
+You can also set an environment variable, called `ALLOC_IN`, to contain the path to the file
+with allocator configuration.
+
+An example configuration file is provided in DINAMITE compiler's repo root, as `alloc.in`
+
+
+The format looks like this: 
+
+```
+# func                number   size   addr
+#
+malloc                 -1       0    -1
+calloc                 0       1    -1
+```
+
+Lines prefixed with "#" are comments.
+
+Definitions are formated as the name of allocator function, followed by three indices:
+
+- The first index refers to the argument containing the number of elements to allocate (think calloc).
+- The second index is the argument denoting the size of a single element (or the whole allocation, in case there's no count argument)
+- The third argument is the index of the returned address. `-1` is specified when the allocator function returns the
+    allocated address.
+
+The above example shows configurations for standard libc allocator functions.
+
+
