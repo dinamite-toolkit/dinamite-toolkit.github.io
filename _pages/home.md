@@ -6,6 +6,8 @@ permalink: /
 
 **DINAMITE compiler pass is available on [GitHub](https://github.com/dinamite-toolkit/dinamite)**
 
+**If you're (planning on) using DINAMITE for your performance debugging, please [get in touch](/contact/)**
+
 If you want to try it out, the best thing to do is click on [Quick Start](/quickstart/) above and
 follow the instructions.
 
@@ -25,7 +27,7 @@ The typical workflow for using DINAMITE goes as follows:
     We currently provide three example logging libraries: binary filesystem output,
     text file system output and binary TCP output.
     The logging library is what emits logs of instrumented events. For more details
-    see our page on logging libraries *link*.
+    see our page on [Logging libraries](user-guide/#logging-libraries)
 3. Execute the instrumented binary (make sure the built `libinstrumentation.so` is
 in the library path on your system.
 
@@ -34,7 +36,7 @@ are using. The most common case for us is using the binary filesystem output lib
 We store our logs in a filesystem, and then process them with our *link* binary trace
 toolkit.
 
-You don't need all the access information? Head over to our Instrumentation Filtering *link*
+You don't need all the access information? Head over to our [Instrumentation Filtering](user-guide/#instrumentation-filtering)
 page, where you can learn how to selectively instrument only the things you're interested in.
 
 In our [Technical Articles](/tech-articles/) section we will write about case studies, new tools we develop and interesting
