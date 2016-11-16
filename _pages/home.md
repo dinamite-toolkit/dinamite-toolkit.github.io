@@ -33,8 +33,7 @@ in the library path on your system.
 
 The output of this process will vary depending on what kind of logging library you
 are using. The most common case for us is using the binary filesystem output library.
-We store our logs in a filesystem, and then process them with our *link* binary trace
-toolkit.
+We store our logs in a filesystem, and then process them with our [binary trace toolkit](https://github.com/dinamite-toolkit/dinamite-binary-trace-parser)
 
 You don't need all the access information? Head over to our [Instrumentation Filtering](user-guide/#instrumentation-filtering)
 page, where you can learn how to selectively instrument only the things you're interested in.

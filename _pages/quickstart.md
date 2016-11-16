@@ -54,8 +54,8 @@ thread of execution. These files will contain logs made up of plain C structures
 `${INST_LIB}/binaryinstrumentation.h`) reflecting the sequence of events in the execution.
 
 To process these logs into a human readable format, or perform any filtering or analysis on them,
-you can use our binary trace analysis toolkit (*link_here*).
+you can use our [binary trace analysis toolkit](https://github.com/dinamite-toolkit/dinamite-binary-trace-parser).
 
 The binary trace analysis toolkit provides a harness for writing plugins to process and analyze DINAMITE's
 default binary output. It was designed to be easily extensible, and comes with a couple of example plugins
-that can be used out of the box.
+that can be used out of the box. You can read detailed instructions for its use [here](/user-guide/#trace-parsing)

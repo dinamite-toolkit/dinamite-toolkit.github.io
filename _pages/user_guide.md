@@ -304,9 +304,11 @@ The above example shows configurations for standard libc allocator functions.
 
 # <a name="trace-parsing"></a> Binary trace parsing framework
 
+You can find our binary trace parsing tool [here](https://github.com/dinamite-toolkit/dinamite-binary-trace-parser)
+
 ## Building
 
-To build this, you must set `$INST_LIB` to point to the location of your `binaryinstrumentation.h` file and then run `make`. For example, assuming your DINAMITE LLVM pass lives in the $DINAMITE directory:
+To build DINAMITE's binary trace toolkit, you must set `$INST_LIB` to point to the location of your `binaryinstrumentation.h` file and then run `make`. For example, assuming your DINAMITE LLVM pass lives in the $DINAMITE directory:
 
     INST_LIB=$DINAMITE/dinamite/library make
 
