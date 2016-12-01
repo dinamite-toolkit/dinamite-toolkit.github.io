@@ -4,40 +4,43 @@ permalink: /
 ---
 # DINAMITE toolkit
 
-**DINAMITE compiler pass is available on [GitHub](https://github.com/dinamite-toolkit/dinamite)**
+**DINAMITE LLVM compiler is available on [GitHub](https://github.com/dinamite-toolkit/dinamite)**
 
-**If you're (planning on) using DINAMITE for your performance debugging, please [get in touch](/contact/)**
+**If you need help using DINAMITE feel free to [get in touch](/contact/)**
 
-If you want to try it out, the best thing to do is click on [Quick Start](/quickstart/) above and
+* Have you ever felt frustrated when debugging a performance issue in a large
+multithreaded application?
+* Have you ever fumed over limitations of performance tools like `perf`?
+* Have you ever wanted to get more insight into a large codebase written by
+other people and understand not only where it spends CPU cycles, but how it actually works?
+
+***If you answered "yes" to any of these questions, DINAMITE is for you.***
+
+DINAMITE automatically instruments C/C++ program to **log names and timestamps of all or selected
+functions and/or variable accesses** into a log file, as the program executes.
+The resulting output is a trace that you can analyze to get all
+kinds of performance insights. Various tools for trace analysis accompany DINAMITE.
+Or you can just use good old Unix tools, like `grep`.
+
+If you want to try out DINAMITE, click on [Quick Start](/quickstart/) and
 follow the instructions.
 
-<br>
 
-DINAMITE toolkit is an ecosystem of tools for program analysis revolving 
-around a powerful instrumentation pass written for the LLVM compiler 
-infrastructure.
-
-The tools can be used to get debug information rich traces about function executions,
-memory allocations and memory accesses.
-
-The typical workflow for using DINAMITE goes as follows:
+**A typical DINAMITE workflow goes as follows:**
 
 1. Build the target program with clang/clang++ and link it with `libinstrumentation.so`
 2. Choose a logging library flavour and build it.
     We currently provide three example logging libraries: binary filesystem output,
     text file system output and binary TCP output.
-    The logging library is what emits logs of instrumented events. For more details
+    The logging library emits logs of instrumented events. For more details
     see our page on [Logging libraries](user-guide/#logging-libraries)
-3. Execute the instrumented binary (make sure the built `libinstrumentation.so` is
-in the library path on your system.
+3. Execute the instrumented binary. The log files will be created in your file
+system or streamed over the network.
+4. Analyze traces using our tools, 3rd party tools or Unix data analytics tools.
 
-The output of this process will vary depending on what kind of logging library you
-are using. The most common case for us is using the binary filesystem output library.
-We store our logs in a filesystem, and then process them with our [binary trace toolkit](https://github.com/dinamite-toolkit/dinamite-binary-trace-parser)
+**To get started** with a simple example, read the [Quick Start](/quickstart/) guide.
+For examples of using DINAMITE with complex systems, from integration into the
+build system to sophisticated trace analysis, check out
+[Technical Articles](/tech-articles/).
 
-You don't need all the access information? Head over to our [Instrumentation Filtering](user-guide/#instrumentation-filtering)
-page, where you can learn how to selectively instrument only the things you're interested in.
-
-In our [Technical Articles](/tech-articles/) section we will write about case studies, new tools we develop and interesting
-findings.
 
