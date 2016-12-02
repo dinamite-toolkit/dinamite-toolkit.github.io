@@ -9,10 +9,11 @@ title: Compiling the WiredTiger key-value store using DINAMITE
 You will need LLVM 3.5 is needed to build and use DINAMITE.
 DINAMITE can be built only within the LLVM's source tree.
 
-A Docker container with LLVM and DINAMITE can be found [here](https://bitbucket.org/datamancers/dinamite-compiler-docker). Use the Dockerfile-wt docker file to prepare for building WiredTiger.
+A Docker container with LLVM and DINAMITE can be found [here](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git).
+Use the Dockerfile-wt docker file to prepare for building WiredTiger.
 
 If you don't like Docker or would like to install LLVM 3.5 and DINAMITE natively
-for other reasons, follow the steps to download the code outlined in the Dockerfile-wt found [here](https://bitbucket.org/datamancers/dinamite-compiler-docker).
+for other reasons, follow the steps to download the code outlined in the Dockerfile-wt found [here](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git).
 Modify the steps for your OS and and then follow the build instructions on the
 [LLVM "Getting Started" website](http://llvm.org/docs/GettingStarted.html#local-llvm-configuration).
 
@@ -32,16 +33,25 @@ This way, the instrumentation pass itself will be built using g++, but the instr
 
 # Building the WiredTiger library
 
-Instructions for building WiredTiger with ''normal'' compilers can be found [here:](http://source.wiredtiger.com/2.8.0/build-posix.html). We assume you 
-building on a Posix system and that you are using a [Docker container](https://bitbucket.org/datamancers/dinamite-compiler-docker).
+Instructions for building WiredTiger with ''normal'' compilers can be found
+[here:](http://source.wiredtiger.com/2.8.0/build-posix.html).
 
 In this article, we will refer to the root of your LLVM installation using the
-`$LLVM_SOURCE variable`. If you are using the Docker container, this variable is
+`$LLVM_SOURCE variable`. If you are using the [Docker container](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git), this variable is
 already set up for you; it would point to `/root/dinamite/llvm-3.5.0.src`. If you
 built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled sources are.
 
+ 1. If you are using the [Docker container](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git)
+ the compiler pass is already included and built, but if you built your own version
+ of LLVM from sources, download the instrumentation pass and the instrumentation
+ library as follows:
+
+    ```
+    cd $LLVM_SOURCE/projects
+    git clone https://github.com/dinamite-toolkit/dinamite.git
+    ```
     
-1. Build the instrumentation pass and the instrumentation library.
+ 1. Build the instrumentation pass and the instrumentation library.
  We will build the version of the library that produces logs in a binary format,
  because this is a lot more efficient than generating text traces. But if you don't
  want to deal with converting binary traces to text just yet, replace `make binary`
@@ -133,18 +143,18 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
     for loops are computed with the assumption that they execute once.
 
     ```
-    {
-        "minimum_function_size" : 50,
-        "check_small_function_loops" : true,
-        "function_size_metric" : "LOC_PATH",
-        "whitelist": {
-             "function_filters" : {
-                  "*" : {
-                       "events" : [ "function" ]
-                  }
-             }
-         }
-    }
+     {
+         "minimum_function_size" : 50,
+         "check_small_function_loops" : true,
+         "function_size_metric" : "LOC_PATH",
+         "whitelist": {
+              "function_filters" : {
+                   "*" : {
+                        "events" : [ "function" ]
+                   }
+              }
+          }
+     }
     ```
      
  6. If you run a command that uses the instrumented WiredTiger library, you need to provide the path for the instrumentation library. For example, suppose you run wtperf:
