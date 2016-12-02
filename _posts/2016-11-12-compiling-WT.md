@@ -1,8 +1,13 @@
 ---
 layout: post
 title: Compiling the WiredTiger key-value store using DINAMITE
+excerpt_separator: <!--more-->
 ---
 
+In this blog post we describe how we compiled with DINAMITE a commercial
+key-value store WiredTiger, which uses `autoconf`, `automake` and `libtool`
+for its build system.
+<!--more-->
 
 ## Environment
 
@@ -50,7 +55,6 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
     cd $LLVM_SOURCE/projects
     git clone https://github.com/dinamite-toolkit/dinamite.git
     ```
-    
  1. Build the instrumentation pass and the instrumentation library.
  We will build the version of the library that produces logs in a binary format,
  because this is a lot more efficient than generating text traces. But if you don't
@@ -156,26 +160,25 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
           }
      }
     ```
-     
- 6. If you run a command that uses the instrumented WiredTiger library, you need to provide the path for the instrumentation library. For example, suppose you run wtperf:
- 
-    ```
-    LD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
-    ```
+6. Next, run your program! If you run a command that uses the instrumented WiredTiger library, you need to provide the path for the instrumentation library. For example, suppose you run wtperf:
 
-    Or, if using a MacOS:
+        ```
+        LD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
+        ```
 
-    ```
-    DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
-    ```
+        Or, if using a MacOS:
 
-    To tell the instrumentation library where to put the resulting performance traces,
-    that will be generated when your program runs, you can set the DINAMITE_TRACE_PREIX
-    variable to the desired location:
+        ```
+        DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
+        ```
 
-    ```
-    DINAMITE_TRACE_PREFIX=/path/to/traces DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
-    ```
+        To tell the instrumentation library where to put the resulting performance traces,
+        that will be generated when your program runs, you can set the DINAMITE_TRACE_PREIX
+        variable to the desired location:
+
+        ```
+        DINAMITE_TRACE_PREFIX=/path/to/traces DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
+        ```
 
 That's it! Now watch your program run and generate traces.
 
