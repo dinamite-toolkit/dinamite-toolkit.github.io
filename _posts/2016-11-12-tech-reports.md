@@ -41,13 +41,16 @@ at /root/dinamite.
     
  1. Build the instrumentation pass and the instrumentation library.
  We will build the version of the library that produces logs in a binary format,
- because this is a lot more efficient than generating text traces.
-	
-	    cd $LLVM/llvm-3.5.0.src/projects/dinamite/library
-	    make binary
-            cd ../
-            make
-
+ because this is a lot more efficient than generating text traces. But if you don't
+ want to deal with converting binary traces to text just yet, replace ```make binary```
+ command below with ```make text```.
+ ```
+   cd $LLVM/llvm-3.5.0.src/projects/dinamite/library
+   make binary
+   cd ../
+   make
+ ```
+ 
  2. Next, you need to clone the WiredTiger tree and run autogen.sh as detailed in [these instructions](http://source.wiredtiger.com/2.8.0/build-posix.html). 
     After you have done so, you need to change how you invoke the ''configure'' command. Instead of invoking it as shown in the build instructions for
 	''normal'' compilers, you need to pass it a few environmental variables, like so: 
@@ -72,125 +75,91 @@ at /root/dinamite.
      your configure script will complain that it can't find the compiler or the
      compilation will fail later because of linkage errors.
 
-  3. You are almost ready to build. Before you do, you need to make a small change
-  to libtool, which is located in the build_posix directory of your WiredTiger tree.
-  Open the libtool file in the editor and search for code that looks sort of
-  like this:
-  
-           elif test X-lc_r = "X$arg"; then
-	             case $host in *-*-openbsd* | *-*-freebsd* | *-*-dragonfly* | *-*-bitrig*)
+ 3. You are almost ready to build. Before you do, you need to make a small change
+    to libtool, which is located in the build_posix directory of your WiredTiger tree.
+    Open the libtool file in the editor and search for code that looks sort of
+    like this:
+    
+      ```
+      elif test X-lc_r = "X$arg"; then
+	   	case $host in
+		*-*-openbsd* | *-*-freebsd* | *-*-dragonfly* | *-*-bitrig*)
 		    # Do not include libc_r directly, use -pthread flag.
 		    continue  
-            ;;
-          esac
-        fi
-        func_append deplibs " $arg"
-        continue
-        ;;
+            	    ;;
+          	esac
+      fi
+      func_append deplibs " $arg"
+      continue
+      ;;
+      ```
 
-   Instead of the "func_append" line, add the following code snippet:
+    Instead of the "func_append" line, add the following code snippet:
 
-     	if [ "$arg" != "-load" ]; then
-                func_append deplibs " $arg"
-        else
-                func_append compile_command " $arg"
-                func_append finalize_command " $arg"
-        fi
+    ```
+     if [ "$arg" != "-load" ]; then
+           func_append deplibs " $arg"
+     else
+           func_append compile_command " $arg"
+           func_append finalize_command " $arg"
+     fi
+    ```
 
-    What is happening here is that libtool is trying to be smart and
+     What is happening here is that libtool is trying to be smart and
    	interpret the -load option to clang as a directive to link to liboad.so.
 	By inserting this if-statement, you are instructing the libtool to not
 	interpret this option as such.
 
- 4. Now invoke the make command as follows:
-	
-	    INST_LIB=/root/dinamite/llvm-3.5.0.src/projects/dinamite/library make
-        
+  4. Now invoke the make command as follows:
+  
+     ```
+     INST_LIB=$LLVM/llvm-3.5.0.src/projects/dinamite/library DIN_FILTERS="/full/path/to/function_filter.json" make
+     ```
+     The INST_LIB variable tells the compiler where the instrumentation library lives.
+     The DIN_FILTERS variable tells the instrumentation pass what to instrument. If you
+     don't provide the filters file, the compiler will insturment all function calls
+     and memory accesses in your program, which may not be what you want.
+
+     Here is the
+     contents of a ```function_filter.json``` file with reasonable defaults. With this
+     file, DINAMITE will instrument all functions whose critical path is at least 40
+     lines of code (LOC), where LOC does not include blank lines or comments and LOC
+     for loops are computed with the assumption that they execute once.
+
+     ```
+     {
+        "minimum_function_size" : 50,
+        "check_small_function_loops" : true,
+        "function_size_metric" : "LOC_PATH",
+        "whitelist": {
+             "function_filters" : {
+                  "*" : {
+                       "events" : [ "function" ]
+                  }
+             }
+         }
+     }
+     ```
+     
  6. If you run a command that uses the instrumented WiredTiger library, you need to provide the path for the instrumentation library. For example, suppose you run wtperf:
- 
-        LD_LIBRARY_PATH=/root/dinamite/llvm-3.5.0.src/projects/dinamite/library ./wtperf
-
+    ```
+     LD_LIBRARY_PATH=/root/dinamite/llvm-3.5.0.src/projects/dinamite/library ./wtperf
+    ```
     Or, if using a MacOS:
+    ```
+    DYLD_LIBRARY_PATH=/root/dinamite/llvm-3.5.0.src/projects/dinamite/library ./wtperf
+    ```
+    To tell the instrumentation library where to put the resulting performance traces,
+    that will be generated when your program runs, you can set the DINAMITE_TRACE_PREIX
+    variable to the desired location:
+    
+    ```
+    DINAMITE_TRACE_PREFIX=/path/to/traces DYLD_LIBRARY_PATH=/root/dinamite/llvm-3.5.0.src/projects/dinamite/library ./wtperf
+    ```
 
-        DYLD_LIBRARY_PATH=/root/dinamite/llvm-3.5.0.src/projects/dinamite/library ./wtperf
+That's it! Now watch your program run and generate traces.
 
+If you run into trouble, get in touch. If you'd like to find out how to control what's instrumented, take a look at the
+[User Guide](/user-guide/). If you'd like to know **what to do with the traces** now that you have them,
+take a look at the other [Technical Articles](/tech-articles/)
 
-## Controlling the instrumentation
-
-The DINAMITE compiler can perform different kinds of instrumentations. For example, it instrument every memory access, or just function entry/exit timestamps, or both. It can also use different formats for the traces. 
-
-### Controlling the trace format.
-
-A text trace will produce a text output, but will slow down the execution many times more than the binary output format. To control the format of the instrumentation trace, compile the instrumentation library in the `INST_LIB` directory:
-
-    cd $INST_LIB
-    make text 
-
-or:
-
-    cd $INST_LIB
-    make binary 
-
-For testing purposes, if you want the binary instrumented, but not producing any output:
-
-    cd $INST_LIB
-    make null
-
-This command will produce `libinstrumentation.so' that is linked into the instrumented binary as you saw from the compilation examples above.
-
-### Controlling what is instrumented.
-
-By default DINAMITE will instrument every memory access in your program. However, often you only want to instrument parts of the code, and not all memory accesses, but simply function entry/exit timestamps. 
-
-In order to instrument only parts of your code, and specific events, DINAMITE supports function filtering.
-To leverage this, you need to provide a filter file. The filter basically works as a white list for functions that are allowed to be instrumented.
-It is stored in JSON format and looks something like this:
-```
-{
-    "function_filters" : {
-            "foo" : {
-                "events" : [
-                        "function"
-                    ]
-            },
-            "bar" : {
-                "events" : [
-                        "alloc"
-                    ]
-            },
-            "baz" : {
-                "events" : [
-                        "access", "function"
-                    ]
-            }
-
-    }
-}
-```
-`foo`, `bar` and `baz` are function names in your code. 
-
-You will need to populate the `function_filters` with a dictionary of function names mapped to lists of events to instrument. Events can be either `alloc`, `access` or `function`.
-
-In order to tell DINAMITE about the function filters, at the time you compile your program with DINAMITE, you will need to set the environment variable `DIN_FILTERS` to point to the JSON document, like so:
-
-    DIN_FILTERS="/path/to/function_filter.json" INST_LIB=/root/dinamite/llvm-3.5.0.src/projects/dinamite/library make -j 4
-
-If you don't set `DIN_FILTERS`, DINAMITE assumes that you want to instrument all the events in your program. **It is safest to provide the full path of the `function_filters.json` file.** If you are building a complex project the build might be performed in multiple directories. If only the top-level directory has the filters file, the files in the other directories will not be filtered correctly.
-
-With C++ code, function names are typically mangled. To find a real function name, run compilation once with `DIN_FILTERS` set. The filtering tool will output `functions.out` which will contain the names of all encountered functions. You can use these to fill your filter list properly.
-
-#### Instrumenting argument values 
-
-In order to instrument the values of specific (or all) arguments to certain functions, add the following into the filters JSON document:
-
-```
-            "function_name" : {
-                "events" : [
-                        "function"
-                    ],
-                "arguments" : [ 0, 1, ...]
-            }
-```
-
-It is important to enable function event filtering for the given function, as without that argument printing will be disabled.
-Then, to enable instrumenting a subset of arguments, you add a new field to the function filter object, called `arguments` and set it to an array of integers (zero-indexed) that enumerate the arguments you wish to instrument. Alternatively, you can set the value of `"arguments"` to a string value of `"*"` (`"arguments" : "*"`). This will tell DINAMITE to instrument all the arguments of the given function.
