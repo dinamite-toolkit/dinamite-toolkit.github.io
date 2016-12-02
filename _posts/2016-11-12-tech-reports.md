@@ -41,131 +41,131 @@ already set up for you; it would point to `/root/dinamite/llvm-3.5.0.src`. If yo
 built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled sources are.
 
     
-1. Build the instrumentation pass and the instrumentation library.
- We will build the version of the library that produces logs in a binary format,
- because this is a lot more efficient than generating text traces. But if you don't
- want to deal with converting binary traces to text just yet, replace `make binary`
- command below with `make text`. **If you are using Docker, the library is already
- built for you**, so you may skip this step, unless you want to change the format
- of the traces.
-    
-    ```
-     cd $LLVM_SOURCE/projects/dinamite/library
-     make binary
-     cd ../
-     make
-    ```
+1.      Build the instrumentation pass and the instrumentation library.
+        We will build the version of the library that produces logs in a binary format,
+        because this is a lot more efficient than generating text traces. But if you don't
+        want to deal with converting binary traces to text just yet, replace `make binary`
+        command below with `make text`. **If you are using Docker, the library is already
+        built for you**, so you may skip this step, unless you want to change the format
+        of the traces.
+
+        ```bash
+         cd $LLVM_SOURCE/projects/dinamite/library
+         make binary
+         cd ../
+         make
+        ```
  
- 2. Next, you need to clone the WiredTiger tree and run autogen.sh as detailed in [these instructions](http://source.wiredtiger.com/2.8.0/build-posix.html). 
-    After you have done so, you need to change how you invoke the ''configure'' command. Instead of invoking it as shown in the build instructions for
-	''normal'' compilers, you need to pass it a few environmental variables, like so: 
-	
-	    INST_LIB=$LLVM_SOURCE/projects/dinamite/library
-	    LD_LIBRARY_PATH=$INST_LIB LDFLAGS="-L$INST_LIB" LIBS="-linstrumentation"
-	    CFLAGS="-O0 -g -Xclang -load -Xclang  $LLVM_SOURCE/Release+Asserts/lib/AccessInstrument.so" CC="clang" ../configure
+2.      Next, you need to clone the WiredTiger tree and run autogen.sh as detailed in [these instructions](http://source.wiredtiger.com/2.8.0/build-posix.html). 
+        After you have done so, you need to change how you invoke the ''configure'' command. Instead of invoking it as shown in the build instructions for
+        ''normal'' compilers, you need to pass it a few environmental variables, like so: 
 
-    **Important**: Some systems won't like the fact that you are setting the
-    INST_LIB variable and attempting to use it on the same command line.
-    In that case, just replace $INST_LIB with the actual path to which it
-    corresponds.
+            INST_LIB=$LLVM_SOURCE/projects/dinamite/library
+            LD_LIBRARY_PATH=$INST_LIB LDFLAGS="-L$INST_LIB" LIBS="-linstrumentation"
+            CFLAGS="-O0 -g -Xclang -load -Xclang  $LLVM_SOURCE/Release+Asserts/lib/AccessInstrument.so" CC="clang" ../configure
 
-    **Important**: If you are building on an OS X, you should use the
-    ''DYLD_LIBRARY_PATH'' instead of the ''LD_LIBRARY_PATH''.
+        **Important**: Some systems won't like the fact that you are setting the
+        INST_LIB variable and attempting to use it on the same command line.
+        In that case, just replace $INST_LIB with the actual path to which it
+        corresponds.
 
-    **Important**: If you have your clang compiler installed somewhere other
-    than the default system path, like `/usr/local`, you need to add your
-     installation path to your path variable and the path to LLVM libraries to
-     the LD_LIBRARY_PATH variable in the above configuration script. Otherwise,
-     your configure script will complain that it can't find the compiler or the
-     compilation will fail later because of linkage errors.
+        **Important**: If you are building on an OS X, you should use the
+        ''DYLD_LIBRARY_PATH'' instead of the ''LD_LIBRARY_PATH''.
 
- 3. You are almost ready to build. Before you do, you need to make a small change
-    to libtool, which is located in the build_posix directory of your WiredTiger tree.
-    Open the libtool file in the editor and search for code that looks sort of
-    like this:
+        **Important**: If you have your clang compiler installed somewhere other
+        than the default system path, like `/usr/local`, you need to add your
+         installation path to your path variable and the path to LLVM libraries to
+         the LD_LIBRARY_PATH variable in the above configuration script. Otherwise,
+         your configure script will complain that it can't find the compiler or the
+         compilation will fail later because of linkage errors.
 
-    ```
-      elif test X-lc_r = "X$arg"; then
-	   	case $host in
-		*-*-openbsd* | *-*-freebsd* | *-*-dragonfly* | *-*-bitrig*)
-		    # Do not include libc_r directly, use -pthread flag.
-		    continue  
-            	    ;;
-          	esac
-      fi
-      func_append deplibs " $arg"
-      continue
-      ;;
-    ```
+3.      You are almost ready to build. Before you do, you need to make a small change
+        to libtool, which is located in the build_posix directory of your WiredTiger tree.
+        Open the libtool file in the editor and search for code that looks sort of
+        like this:
 
-    Instead of the "func_append" line, add the following code snippet:
+        ```bash
+          elif test X-lc_r = "X$arg"; then
+           	case $host in
+        	*-*-openbsd* | *-*-freebsd* | *-*-dragonfly* | *-*-bitrig*)
+        	    # Do not include libc_r directly, use -pthread flag.
+        	    continue  
+                	    ;;
+              	esac
+          fi
+          func_append deplibs " $arg"
+          continue
+          ;;
+        ```
 
-    ```
-     if [ "$arg" != "-load" ]; then
-           func_append deplibs " $arg"
-     else
-           func_append compile_command " $arg"
-           func_append finalize_command " $arg"
-     fi
-    ```
+        Instead of the "func_append" line, add the following code snippet:
 
-     What is happening here is that libtool is trying to be smart and
-   	interpret the -load option to clang as a directive to link to liboad.so.
-	By inserting this if-statement, you are instructing the libtool to not
-	interpret this option as such.
+        ```bash
+         if [ "$arg" != "-load" ]; then
+               func_append deplibs " $arg"
+         else
+               func_append compile_command " $arg"
+               func_append finalize_command " $arg"
+         fi
+        ```
 
-4. Now invoke the make command as follows:
+         What is happening here is that libtool is trying to be smart and
+        	interpret the -load option to clang as a directive to link to liboad.so.
+        By inserting this if-statement, you are instructing the libtool to not
+        interpret this option as such.
+        
+4.      Now invoke the make command as follows:
+        
+        ```
+        INST_LIB=$LLVM_SOURCE/projects/dinamite/library DIN_FILTERS="/full/path/to/function_filter.json" make
+        ```
+        
+        The INST_LIB variable tells the compiler where the instrumentation library lives.
+        If you are using Docker, it's already properly set in your environment.
+        The DIN_FILTERS variable tells the instrumentation pass what to instrument. If you
+        don't provide the filters file, the compiler will insturment all function calls
+        and memory accesses in your program, which may not be what you want.
 
-    ```
-    INST_LIB=$LLVM_SOURCE/projects/dinamite/library DIN_FILTERS="/full/path/to/function_filter.json" make
-    ```
-    
-    The INST_LIB variable tells the compiler where the instrumentation library lives.
-    If you are using Docker, it's already properly set in your environment.
-    The DIN_FILTERS variable tells the instrumentation pass what to instrument. If you
-    don't provide the filters file, the compiler will insturment all function calls
-    and memory accesses in your program, which may not be what you want.
-
-    Here is the
-    contents of a ```function_filter.json``` file with reasonable defaults. With this
-    file, DINAMITE will instrument all functions whose critical path is at least 40
-    lines of code (LOC), where LOC does not include blank lines or comments and LOC
-    for loops are computed with the assumption that they execute once.
-
-    ```
-    {
-        "minimum_function_size" : 50,
-        "check_small_function_loops" : true,
-        "function_size_metric" : "LOC_PATH",
-        "whitelist": {
-             "function_filters" : {
-                  "*" : {
-                       "events" : [ "function" ]
-                  }
-             }
-         }
-    }
-    ```
+        Here is the
+        contents of a ```function_filter.json``` file with reasonable defaults. With this
+        file, DINAMITE will instrument all functions whose critical path is at least 40
+        lines of code (LOC), where LOC does not include blank lines or comments and LOC
+        for loops are computed with the assumption that they execute once.
+         
+        ```
+        {
+            "minimum_function_size" : 50,
+            "check_small_function_loops" : true,
+            "function_size_metric" : "LOC_PATH",
+            "whitelist": {
+                "function_filters" : {
+                    "*" : {
+                        "events" : [ "function" ]
+                    }
+                }
+            }
+        }
+        ```
      
- 6. If you run a command that uses the instrumented WiredTiger library, you need to provide the path for the instrumentation library. For example, suppose you run wtperf:
- 
-    ```
-    LD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
-    ```
+6.      If you run a command that uses the instrumented WiredTiger library, you need to provide the path for the instrumentation library. For example, suppose you run wtperf:
 
-    Or, if using a MacOS:
+        ```
+        LD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
+        ```
 
-    ```
-    DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
-    ```
+        Or, if using a MacOS:
 
-    To tell the instrumentation library where to put the resulting performance traces,
-    that will be generated when your program runs, you can set the DINAMITE_TRACE_PREIX
-    variable to the desired location:
+        ```
+        DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
+        ```
 
-    ```
-    DINAMITE_TRACE_PREFIX=/path/to/traces DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
-    ```
+        To tell the instrumentation library where to put the resulting performance traces,
+        that will be generated when your program runs, you can set the DINAMITE_TRACE_PREIX
+        variable to the desired location:
+
+        ```
+        DINAMITE_TRACE_PREFIX=/path/to/traces DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
+        ```
 
 That's it! Now watch your program run and generate traces.
 
