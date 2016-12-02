@@ -41,7 +41,7 @@ already set up for you; it would point to `/root/dinamite/llvm-3.5.0.src`. If yo
 built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled sources are.
 
     
- 1. Build the instrumentation pass and the instrumentation library.
+1. Build the instrumentation pass and the instrumentation library.
  We will build the version of the library that produces logs in a binary format,
  because this is a lot more efficient than generating text traces. But if you don't
  want to deal with converting binary traces to text just yet, replace `make binary`
@@ -114,10 +114,10 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
 	By inserting this if-statement, you are instructing the libtool to not
 	interpret this option as such.
 
- 4. Now invoke the make command as follows:
+4. Now invoke the make command as follows:
 
     ```
-     INST_LIB=$LLVM_SOURCE/projects/dinamite/library DIN_FILTERS="/full/path/to/function_filter.json" make
+    INST_LIB=$LLVM_SOURCE/projects/dinamite/library DIN_FILTERS="/full/path/to/function_filter.json" make
     ```
     
     The INST_LIB variable tells the compiler where the instrumentation library lives.
@@ -126,14 +126,14 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
     don't provide the filters file, the compiler will insturment all function calls
     and memory accesses in your program, which may not be what you want.
 
-     Here is the
-     contents of a ```function_filter.json``` file with reasonable defaults. With this
-     file, DINAMITE will instrument all functions whose critical path is at least 40
-     lines of code (LOC), where LOC does not include blank lines or comments and LOC
-     for loops are computed with the assumption that they execute once.
+    Here is the
+    contents of a ```function_filter.json``` file with reasonable defaults. With this
+    file, DINAMITE will instrument all functions whose critical path is at least 40
+    lines of code (LOC), where LOC does not include blank lines or comments and LOC
+    for loops are computed with the assumption that they execute once.
 
-     ```
-     {
+    ```
+    {
         "minimum_function_size" : 50,
         "check_small_function_loops" : true,
         "function_size_metric" : "LOC_PATH",
@@ -144,8 +144,8 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
                   }
              }
          }
-     }
-     ```
+    }
+    ```
      
  6. If you run a command that uses the instrumented WiredTiger library, you need to provide the path for the instrumentation library. For example, suppose you run wtperf:
  
