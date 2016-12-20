@@ -1,0 +1,5 @@
+*** __evict_get_ref
+	 Total running time: 2,165,874,458 ns.
+	 Average running time: 671,588 ns.
+	 Largest running time: 1,000,742,169 ns.
+------------------

@@ -3,8 +3,7 @@ layout: post
 title: Visualizing the execution flow using DINAMITE traces
 ---
 
-In this post, we explain to obtain a high-level summary of the execution using
-DINAMITE trace analysis tools.
+In this post, we explain how to obtain a high-level summary of the execution using DINAMITE trace analysis tools.
 
 <!--more-->
 

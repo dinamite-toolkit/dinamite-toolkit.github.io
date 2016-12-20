@@ -1,0 +1,13 @@
+*** __wt_readlock_spin 0x7fca82d02c70
+	 Total running time: 4,537,565,076 ns.
+	 Average running time: 38,218 ns.
+	 Largest running time: 1,010,293,444 ns.
+------------------
+Lock "0x7fca82d02c70":
+	 Num acquire: 239161
+	 Num trylock: 0
+	 Num release: 119685
+	 Average time in acquire: 19538 ns.
+	 Average time in trylock: 0 ns.
+	 Average time in release: 1792 ns.
+	 Average time the lock was held: 30545 ns.

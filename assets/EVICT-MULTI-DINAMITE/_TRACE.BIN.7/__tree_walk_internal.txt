@@ -1,0 +1,5 @@
+*** __tree_walk_internal
+	 Total running time: 185,027,834 ns.
+	 Average running time: 3,445 ns.
+	 Largest running time: 3,794,314 ns.
+------------------

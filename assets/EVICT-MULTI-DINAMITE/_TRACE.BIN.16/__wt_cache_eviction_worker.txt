@@ -1,0 +1,5 @@
+*** __wt_cache_eviction_worker
+	 Total running time: 9,672,099,103 ns.
+	 Average running time: 8,266,751 ns.
+	 Largest running time: 1,057,725,786 ns.
+------------------

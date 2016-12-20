@@ -1,0 +1,5 @@
+*** __cursor_row_search
+	 Total running time: 26,751,582,952 ns.
+	 Average running time: 224,943 ns.
+	 Largest running time: 1,107,592,984 ns.
+------------------

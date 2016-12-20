@@ -1,0 +1,5 @@
+*** __wt_btcur_update
+	 Total running time: 17,391,519,373 ns.
+	 Average running time: 893,660 ns.
+	 Largest running time: 1,010,090,294 ns.
+------------------

@@ -1,0 +1,5 @@
+*** __wt_row_modify
+	 Total running time: 14,845,546,013 ns.
+	 Average running time: 740,241 ns.
+	 Largest running time: 1,001,355,416 ns.
+------------------

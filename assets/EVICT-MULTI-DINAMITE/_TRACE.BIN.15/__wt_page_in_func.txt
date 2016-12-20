@@ -1,0 +1,5 @@
+*** __wt_page_in_func
+	 Total running time: 20,737,394,625 ns.
+	 Average running time: 87,145 ns.
+	 Largest running time: 1,102,242,142 ns.
+------------------

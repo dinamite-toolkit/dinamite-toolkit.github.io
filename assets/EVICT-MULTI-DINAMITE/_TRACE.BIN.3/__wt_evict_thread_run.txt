@@ -1,0 +1,5 @@
+*** __wt_evict_thread_run
+	 Total running time: 2,051,401 ns.
+	 Average running time: 2,051,401 ns.
+	 Largest running time: 2,051,401 ns.
+------------------

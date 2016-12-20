@@ -1,0 +1,5 @@
+*** __inmem_row_leaf
+	 Total running time: 3,158,675,571 ns.
+	 Average running time: 508,971 ns.
+	 Largest running time: 1,010,701,454 ns.
+------------------

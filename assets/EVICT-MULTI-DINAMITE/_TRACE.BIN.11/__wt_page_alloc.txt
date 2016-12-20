@@ -1,0 +1,5 @@
+*** __wt_page_alloc
+	 Total running time: 2,136,274,198 ns.
+	 Average running time: 116,259 ns.
+	 Largest running time: 1,007,570,816 ns.
+------------------

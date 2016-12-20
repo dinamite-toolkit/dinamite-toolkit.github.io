@@ -1,0 +1,5 @@
+*** __wt_compact
+	 Total running time: 536,746,149 ns.
+	 Average running time: 1,672,106 ns.
+	 Largest running time: 67,665,085 ns.
+------------------

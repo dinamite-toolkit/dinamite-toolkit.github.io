@@ -1,0 +1,13 @@
+*** __wt_spin_lock 0x7fca83015640
+	 Total running time: 1,867,652,182 ns.
+	 Average running time: 1,197,980 ns.
+	 Largest running time: 1,001,280,709 ns.
+------------------
+Lock "0x7fca83015640":
+	 Num acquire: 1559
+	 Num trylock: 0
+	 Num release: 1559
+	 Average time in acquire: 1197980 ns.
+	 Average time in trylock: 0 ns.
+	 Average time in release: 1542 ns.
+	 Average time the lock was held: 2095 ns.

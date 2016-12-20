@@ -1,0 +1,5 @@
+*** __wt_txn_get_snapshot
+	 Total running time: 7,853,578,367 ns.
+	 Average running time: 67,056 ns.
+	 Largest running time: 1,010,314,776 ns.
+------------------

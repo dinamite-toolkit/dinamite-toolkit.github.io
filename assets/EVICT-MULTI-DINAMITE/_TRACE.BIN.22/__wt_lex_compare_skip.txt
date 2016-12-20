@@ -1,0 +1,5 @@
+*** __wt_lex_compare_skip
+	 Total running time: 1,504,656,111 ns.
+	 Average running time: 797 ns.
+	 Largest running time: 86,292,063 ns.
+------------------

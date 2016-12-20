@@ -1,0 +1,5 @@
+*** __ref_index_slot
+	 Total running time: 26,442,165 ns.
+	 Average running time: 492 ns.
+	 Largest running time: 3,782,210 ns.
+------------------

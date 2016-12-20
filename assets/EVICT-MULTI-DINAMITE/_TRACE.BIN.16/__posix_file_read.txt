@@ -1,0 +1,5 @@
+*** __posix_file_read
+	 Total running time: 16,615,445,257 ns.
+	 Average running time: 897,113 ns.
+	 Largest running time: 1,117,476,582 ns.
+------------------

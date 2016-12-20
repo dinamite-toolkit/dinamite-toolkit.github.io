@@ -1,0 +1,5 @@
+*** __rec_copy_incr
+	 Total running time: 5,208,857,020 ns.
+	 Average running time: 2,549 ns.
+	 Largest running time: 1,124,697,969 ns.
+------------------

@@ -1,0 +1,5 @@
+*** __rec_row_leaf
+	 Total running time: 32,479,450,928 ns.
+	 Average running time: 1,017,462 ns.
+	 Largest running time: 1,124,843,643 ns.
+------------------

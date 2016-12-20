@@ -1,0 +1,5 @@
+*** __wt_sleep
+	 Total running time: 2,991,640,584 ns.
+	 Average running time: 2,380 ns.
+	 Largest running time: 1,012,844,112 ns.
+------------------

@@ -1,0 +1,5 @@
+*** __wt_hazard_clear
+	 Total running time: 2,104,955,717 ns.
+	 Average running time: 8,904 ns.
+	 Largest running time: 1,001,548,060 ns.
+------------------

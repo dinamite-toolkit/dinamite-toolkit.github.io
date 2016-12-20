@@ -1,0 +1,5 @@
+*** __wt_btcur_search
+	 Total running time: 60,029,099,875 ns.
+	 Average running time: 60,029,099,875 ns.
+	 Largest running time: 60,029,099,875 ns.
+------------------

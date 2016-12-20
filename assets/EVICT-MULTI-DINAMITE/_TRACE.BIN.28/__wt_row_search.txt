@@ -1,0 +1,5 @@
+*** __wt_row_search
+	 Total running time: 27,543,318,779 ns.
+	 Average running time: 232,889 ns.
+	 Largest running time: 1,032,152,077 ns.
+------------------

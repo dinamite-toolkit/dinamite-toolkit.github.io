@@ -1,0 +1,5 @@
+*** __evict_walk_file
+	 Total running time: 274,163,568 ns.
+	 Average running time: 8,535 ns.
+	 Largest running time: 3,799,524 ns.
+------------------

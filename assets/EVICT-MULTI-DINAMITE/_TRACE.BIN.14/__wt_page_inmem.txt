@@ -1,0 +1,5 @@
+*** __wt_page_inmem
+	 Total running time: 1,981,193,879 ns.
+	 Average running time: 110,415 ns.
+	 Largest running time: 125,544,385 ns.
+------------------

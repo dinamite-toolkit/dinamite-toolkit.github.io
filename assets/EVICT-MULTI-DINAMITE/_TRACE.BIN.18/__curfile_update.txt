@@ -1,0 +1,5 @@
+*** __curfile_update
+	 Total running time: 16,323,454,423 ns.
+	 Average running time: 838,002 ns.
+	 Largest running time: 1,001,637,437 ns.
+------------------

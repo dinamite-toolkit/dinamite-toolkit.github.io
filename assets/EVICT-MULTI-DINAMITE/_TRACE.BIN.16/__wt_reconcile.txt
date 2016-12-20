@@ -1,0 +1,5 @@
+*** __wt_reconcile
+	 Total running time: 1,276,613,758 ns.
+	 Average running time: 1,333,974 ns.
+	 Largest running time: 1,000,123,338 ns.
+------------------
