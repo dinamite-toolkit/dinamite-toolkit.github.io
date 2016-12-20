@@ -8,7 +8,7 @@ flow of the execution and performance of different functions.
 
 <!--more-->
 
-Our [previous post](https://dinamite-toolkit.github.io/2016/12/2/visualize/execution/flow/WT) 
+Our [previous post](https://dinamite-toolkit.github.io/2016/12/02/visualize-execution-flow-WT)
 described how to parse binary traces created in the process of running the
 DINAMITE-instrumented program. The parsing step will both convert the binary traces to
 text as well as create summary files and visual execution flow charts, showing how the
@@ -16,7 +16,7 @@ program transitions between different function-related states and how much time
 it spends in each function. As of late December 2016, DINAMITE features new and improved
 execution flow charts!
 
-The `do-all.sh` script in the binary trace toolkit (see [previous post](https://dinamite-toolkit.github.io/2016/12/2/visualize/execution/flow/WT))
+The `do-all.sh` script in the binary trace toolkit (see [previous post](https://dinamite-toolkit.github.io/2016/12/02/visualize-execution-flow-WT))
 will now produce a directory called `HTML` in the same directory where you ran the script.
 By opening `HTML/index.html` inside your browser, you will see execution flow charts
 for all threads on a single page and clicking on any image takes you to a new page,
@@ -85,7 +85,7 @@ simply go into the directory containing text traces and run:
    % $DINAMITE_BINTRACE_TOOLKIT/process_logs.py -p 3.0 trace.bin.*.txt
    ```
 
-See [previous post](https://dinamite-toolkit.github.io/2016/12/2/visualize/execution/flow/WT)
+See [previous post](https://dinamite-toolkit.github.io/2016/12/02/visualize-execution-flow-WT)
 if you need information on how to download the DINAMITE binary trace toolkit.
 
 
