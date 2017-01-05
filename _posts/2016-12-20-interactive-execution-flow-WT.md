@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Visualizing the execution flow using DINAMITE traces
+title: Interactive execution flow diagrams visualize DINAMITE traces
 ---
 
 In this post we introduce DINAMITE's interactive execution flow charts -- charts that simultaneously visualize the
