@@ -88,6 +88,6 @@ see all function names and timestamps. For example, you would see records like t
 
    But the best part is the visual summary of the traces, which can be found in
    the new `HTML` directory -- created in the same directory where you processed
-   the traces. Just open `HTML/index.html` in your browser. Our [next post]((https://dinamite-toolkit.github.io/2016/12/20/interactive-execution-flow-WT/) shows
+   the traces. Just open `HTML/index.html` in your browser. Our [next post](https://dinamite-toolkit.github.io/2016/12/20/interactive-execution-flow-WT) shows
    examples of visual diagrams you will see and explains how to interpret them.
 
