@@ -54,7 +54,8 @@ trace toolkit lives, so you need to set the environment variable
 `$DINAMITE_BINTRACE_TOOLKIT` to indicate its location as you invoke the script:
 
    ```
-   % $DINAMITE_BINTRACE_TOOLKIT=/home/dinamite-binary-trace-parser $DINAMITE_BINTRACE_TOOLKIT/process-logs.py trace.bin.*
+   % $DINAMITE_BINTRACE_TOOLKIT=/home/dinamite-binary-trace-parser
+   % $DINAMITE_BINTRACE_TOOLKIT/process-logs.py trace.bin.*
    ```
 
    Now sit back and relax or go get a coffee while the files are being processed.
