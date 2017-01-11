@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Visualizing the execution flow using DINAMITE traces
+title: How to process DINAMITE binary traces
 ---
 
 In this post, we explain how to obtain a high-level summary of the execution using DINAMITE trace analysis tools.
@@ -19,6 +19,17 @@ processing and visualizing the traces, and build it:
    % cd dinamite-binary-trace-parser
    % INST_LIB=$LLVM_SOURCE/projects/dinamite/library make
    ```
+2. After you successfully compile the trace parser, set an environment variable
+that will point to its location. This variable will be used later by the trace
+processing script:
+
+   ```
+   % DINAMITE_TRACE_PARSER="dinamite-binary-trace-parser-directory/trace_parser"
+   ```
+
+To make sure the variable sticks around, add the directive to your shell resource
+file, such as ```.bashrc```.
+
 2. For convenience, put the traces as well as all the `map_*` files generated
 during the DINAMITE compilation into the working directory, where you will process
 the traces. Assuming your traces were placed into `/tmp` and you compiled the
@@ -43,7 +54,7 @@ trace toolkit lives, so you need to set the environment variable
 `$DINAMITE_BINTRACE_TOOLKIT` to indicate its location as you invoke the script:
 
    ```
-   % $DINAMITE_BINTRACE_TOOLKIT=/home/dinamite-binary-trace-parser $DINAMITE_BINTRACE_TOOLKIT/do-all.sh trace.bin.*
+   % $DINAMITE_BINTRACE_TOOLKIT=/home/dinamite-binary-trace-parser $DINAMITE_BINTRACE_TOOLKIT/process-logs.py trace.bin.*
    ```
 
    Now sit back and relax or go get a coffee while the files are being processed.
@@ -67,74 +78,15 @@ see all function names and timestamps. For example, you would see records like t
    Linux and `mach_absolute_time` on OS X (these calls are just as fast as reading
    the system time directly from the `rdtsc` register.
 
-   In addition to the text traces, you will also have `trace.bin.*.summary`,
-   for each trace file.  Summary files tell you what functions were executed by
+   In addition to the text traces, you will also have `trace.bin.*.summary.txt`
+   and `trade.bin.*.summary.csv` for each trace file.
+   Summary files tell you what functions were executed by
    the corresponding thread, how many times each function was called, and how
-   much time it took to execute on average and in total.
+   much time it took to execute on average and in total. The text and csv files
+   carry equivalent information, but the latter are easier to parse.
 
-   But the best part is the visual summaries of the traces, which will be placed
-   in the PNG files.
-
-5. For each trace file there will be a corresponding PNG with a `enter_exit.0.0%.png`
-extension. This file contains a diagram visualizing the execution as a state machine,
-where each state is either a function entry or a function exit, and edges are annoted
-with the numbers showing how many times a particular state transition has occurred.
-
-   0.0% in the file's name indicates that there was no performance-related
-   filtering applied to the execution flow diagram: functions that contributed at
-   least 0.0% to the execution time were all included in the diagram. For many
-   real-world applications this would make the diagram large and difficult to look
-   at, so we are going to invoke a script to filter out all the functions that
-   contributed less than 3%:
-
-   ```
-   % $DINAMITE_BINTRACE_TOOLKIT/process_logs.py -p 3.0 trace.bin.*.txt
-   ```
-
-   Here is one of the resulting diagrams that we obtained for the WiredTiger trace
-   (running the LevelDB benchmark) compiled using the default function filter
-   file from the [previous post](https://dinamite-toolkit.github.io/2016/11/12/compiling-WT/).
-
-   ![WiredTiger execution flow diagram]({{ site.url }}/assets/trace.png)
-
-   Each function state is colour coded depending on how much time this function
-   contributed to the execution (more saturated colours: more time spent in
-   this function). Percentages inside the circles representing the functions
-   show much time the function contributed to the execution.
-   Note that these percentages are *cumulative*. For example, function `__clsm_next`, which
-   takes 98% of the execution time, is reported to call `__wt_btcur_next`, which
-   takes 80% of the execution time: the execution time of `__wt_btcur_next` is counted
-   toward the execution time of its parent function `__clsm_next`.
-
-   The execution flow diagram reveals some interesting
-   information about how the program works and runs. Even
-   a developer entirely unfamiliar with the WiredTiger codebase can intuit that
-   this program iterates over a Btree using a database cursor (repeated calls to
-   `__wt_btcur_next` on the left side of the diagram). From the numbers on the
-   execution flow chart edges we infer that the program iterated over the cursor
-   in the vicinity of 200K times. We observe that roughly 2200 times the progam
-   calls `__wt_page_in_func`, which probably indicates that about 1% of the
-   time the needed memory page was not in the page cache, so we had to "page it
-   in" from disk.
-
-   For comparison's sake, here is the output that we get from profiling
-   the same execution using the samping profiler `perf`:
-
-   ![WiredTiger execution flow diagram]({{ site.url }}/assets/WT-leveldb.png)
-
-   We can see that the top-ranking function `__wt_btcur_next` takes around 85%
-   of execution time according to `perf`: pretty close to the time reported by the
-   execution flow diagram. However, because the execution flow diagram was obtained
-   running *instrumented* code, it ran slower than the uninstrumented program
-   sampled by `perf`, so the percentages reported by `perf` and by the execution
-   flow diagram may not be the same.
-
-   Further, `perf` reports only the CPU time, while the execution flow diagram
-   measures the total time. Note, for example, the function `__wt_page_in_func`.
-   According to `perf`, it takes 0.08% of the CPU time, but the execution flow
-   diagram reports that it takes 40% of the execution time. This function reads
-   from disk the database pages that are not found in the cache: it does I/O, so it's
-   not surprising that its CPU time is much smaller than its actual execution time.
-
-
+   But the best part is the visual summary of the traces, which can be found in
+   the new `HTML` directory -- created in the same directory where you processed
+   the traces. Just open `HTML/index.html` in your browser. Our [next post]((https://dinamite-toolkit.github.io/2016/12/20/interactive-execution-flow-WT/) shows
+   examples of visual diagrams you will see and explains how to interpret them.
 
