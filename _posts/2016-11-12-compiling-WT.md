@@ -14,19 +14,29 @@ for its build system.
 You will need LLVM 3.5 is needed to build and use DINAMITE.
 DINAMITE can be built only within the LLVM's source tree.
 
-A Docker container with LLVM and DINAMITE can be found [here](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git).
+A Docker container with LLVM and DINAMITE can be found
+[here](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git).
 Use the Dockerfile-wt docker file to prepare for building WiredTiger.
 
-If you don't like Docker or would like to install LLVM 3.5 and DINAMITE natively
-for other reasons, follow the steps to download the code outlined in the Dockerfile-wt found [here](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git).
-Modify the steps for your OS and and then follow the build instructions on the
-[LLVM "Getting Started" website](http://llvm.org/docs/GettingStarted.html#local-llvm-configuration).
+If you don't like Docker or would like to install LLVM 3.5 and
+DINAMITE natively for other reasons, follow the steps to download the
+code outlined in the Dockerfile-wt found
+[here](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git).
+Modify the steps for your OS and and then follow the build
+instructions on the [LLVM "Getting Started"
+website](http://llvm.org/docs/GettingStarted.html#local-llvm-configuration).
 
 ### MacOS note:
 
-We are investigating a strange anomaly on OS X, where the main compiler pass would only build with the built-in system clang or g++, while the instrumented programs would only build with the clang included in the LLVM distribution. To work around it, do the following:
+We are investigating a strange anomaly on OS X, where the main
+compiler pass would only build with the built-in system clang or g++,
+while the instrumented programs would only build with the clang
+included in the LLVM distribution. To work around it, do the
+following:
 
-To build LLVM 3.5.0 natively on a MacOS, build and install clang as part of building the LLVM using cmake as explained on the LLVM's "Getting started" page:
+To build LLVM 3.5.0 natively on a MacOS, build and install clang as
+part of building the LLVM using cmake as explained on the LLVM's
+"Getting started" page:
  
     cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr/local
 
@@ -62,14 +72,14 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
  command below with `make text`. **If you are using Docker, the library is already
  built for you**, so you may skip this step, unless you want to change the format
  of the traces.
-    
+ 
     ```
      cd $LLVM_SOURCE/projects/dinamite/library
      make binary
      cd ../
      make
     ```
- 
+
  2. Next, you need to clone the WiredTiger tree and run autogen.sh as detailed in [these instructions](http://source.wiredtiger.com/2.8.0/build-posix.html). 
     After you have done so, you need to change how you invoke the ''configure'' command. Instead of invoking it as shown in the build instructions for
 	''normal'' compilers, you need to pass it a few environmental variables, like so: 
@@ -78,6 +88,21 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
 	    LD_LIBRARY_PATH=$INST_LIB LDFLAGS="-L$INST_LIB" LIBS="-linstrumentation"
 	    CFLAGS="-O0 -g -Xclang -load -Xclang  $LLVM_SOURCE/Release+Asserts/lib/AccessInstrument.so" CC="clang" ../configure
 
+    **Important**: The preceding command tells the `configure` command
+    to use the `clang` compiler. If you have more than one version of
+    clang installed, make sure that you point the configure to the
+    **version of clang that comes with the DINAMITE installation**
+    (currently 3.5.0). Otherwise you won't be able to configure or
+    build the programs.
+
+    ** Important**: If you have your clang compiler installed
+    somewhere other than the default system path, like `/usr/local`,
+    you need to add your installation path to your path variable. You
+    also need to add the path to LLVM libraries to the LD_LIBRARY_PATH
+    variable in the above configuration script. Otherwise, your
+    configure script will complain that it can't find the compiler or
+    the compilation will fail later because of linkage errors.
+
     **Important**: Some systems won't like the fact that you are setting the
     INST_LIB variable and attempting to use it on the same command line.
     In that case, just replace $INST_LIB with the actual path to which it
@@ -85,13 +110,6 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
 
     **Important**: If you are building on an OS X, you should use the
     ''DYLD_LIBRARY_PATH'' instead of the ''LD_LIBRARY_PATH''.
-
-    **Important**: If you have your clang compiler installed somewhere other
-    than the default system path, like `/usr/local`, you need to add your
-     installation path to your path variable and the path to LLVM libraries to
-     the LD_LIBRARY_PATH variable in the above configuration script. Otherwise,
-     your configure script will complain that it can't find the compiler or the
-     compilation will fail later because of linkage errors.
 
  3. You are almost ready to build. Before you do, you need to make a small change
     to libtool, which is located in the build_posix directory of your WiredTiger tree.
