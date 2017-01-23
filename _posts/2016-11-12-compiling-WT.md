@@ -44,7 +44,10 @@ Then, in the top-level directory of the LLVM source, run:
 
     CXX=g++ ./configure
 
-This way, the instrumentation pass itself will be built using g++, but the instrumented programs will be built using the clang installed in `/usr/local`, provided that it is the default version that your system finds. If not, put `/usr/local` as the first item on your path. 
+This way, the instrumentation pass itself will be built using g++, but
+the instrumented programs will be built using the clang installed in
+`/usr/local`, provided that it is the default version that your system
+finds. If not, put `/usr/local` as the first item on your path.
 
 # Building the WiredTiger library
 
@@ -141,10 +144,29 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
      fi
     ```
 
-     What is happening here is that libtool is trying to be smart and
-   	interpret the -load option to clang as a directive to link to liboad.so.
-	By inserting this if-statement, you are instructing the libtool to not
-	interpret this option as such.
+    In some versions of libtool, you would see a slightly different
+     syntax, so you'd need to replace
+
+    ```
+     deplibs+=" $arg"
+    ```
+
+    with:
+
+    ```
+     if [ "$arg" != "-load" ]; then
+           deplibs+=" $arg"
+     else
+           compile_command+=" $arg"
+           finalize_command+=" $arg"
+     fi
+    ```
+    
+    What is happening here is that
+     libtool is trying to be smart and interpret the -load option to
+     clang as a directive to link to liboad.so.  By inserting this
+     if-statement, you are instructing the libtool to not interpret
+     this option as such.
 
 4. Now invoke the make command as follows:
 
