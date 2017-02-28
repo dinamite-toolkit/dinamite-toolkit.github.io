@@ -4,7 +4,12 @@ permalink: user-guide/
 ---
 # User Guide
 
-This page is intended to help users leverage all the features of DINAMITE.
+This page provides detailed instructions for controlling the degree
+and format of the instrumenation injected into the program by
+DINAMITE.  If you are looking for a quick way to try DINAMITE using
+default parameters, please refer to the <a href="/quickstart">Quick
+Start</a> guide or to one of the <a
+href="/tech-articles/index">Technical Articles</a>.
 
 ## Contents
 
@@ -23,13 +28,18 @@ This page is intended to help users leverage all the features of DINAMITE.
 
 <hr>
 
-# <a name="instrumentation-filtering"></a> Instrumentation filtering 
+# <a name="instrumentation-filtering"></a> Instrumentation filtering
 
-By default DINAMITE will instrument every memory access in your program. However, often you only want to instrument parts of the code, and not all memory accesses, but simply function entry/exit timestamps. 
+By default DINAMITE will instrument every memory access in your
+program. However, often you only want to instrument parts of the code,
+and not all memory accesses, but simply function entry/exit
+timestamps.
 
-In order to instrument only parts of your code, and specific events, DINAMITE supports function filtering.
-To leverage this, you need to provide a filter file. The filter basically works as a configuration for functions that are allowed to be instrumented.
-It is stored in JSON format and looks something like this:
+In order to instrument only parts of your code, and specific events,
+DINAMITE supports function filtering.  To leverage this, you need to
+provide a filter file. The filter basically works as a configuration
+for functions that are allowed to be instrumented.  It is stored in
+JSON format and looks something like this:
 
 ```
 {

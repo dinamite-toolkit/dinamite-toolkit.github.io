@@ -4,26 +4,33 @@ permalink: /
 ---
 # DINAMITE toolkit
 
-**DINAMITE LLVM compiler is available on [GitHub](https://github.com/dinamite-toolkit/dinamite)**
+DINAMITE is a unique set of tools that deliver ***program comprehension and performance insight.***
 
-**If you need help using DINAMITE feel free to [get in touch](/contact/)**
-
-* Have you ever felt frustrated when debugging a performance issue in a large
-multithreaded application?
-* Have you ever fumed over limitations of performance tools like `perf`?
-* Have you ever wanted to get more insight into a large codebase written by
-other people and understand not only where it spends CPU cycles, but how it actually works?
+* Have you ever felt frustrated when debugging a performance issue in
+a large multithreaded application?
+* Have you ever fumed over
+limitations of performance tools like `perf`?
+* Have you ever wanted
+to get more insight into a large codebase written by other people and
+understand not only where it spends CPU cycles, but how it actually
+works?
 
 ***If you answered "yes" to any of these questions, DINAMITE is for you.***
 
-DINAMITE automatically instruments C/C++ program to **log names and timestamps of all or selected
-functions and/or variable accesses** into a log file, as the program executes.
-The resulting output is a trace that you can analyze to get all
-kinds of performance insights. Various tools for trace analysis accompany DINAMITE.
-Or you can just use good old Unix tools, like `grep`.
+* DINAMITE automatically instruments C/C++ programs to **log names and
+timestamps of all or selected functions and/or variables**
+into a log file, as the program executes.
+* As you run the program,
+it produces the execution log.
+* You can analyze the logs using
+sophisticated and [visually rich tools](/trace-analysis/). Or just use
+`grep` ;).
 
-If you want to try out DINAMITE, click on [Quick Start](/quickstart/) and
-follow the instructions.
+**DINAMITE LLVM compiler is available on [GitHub](https://github.com/dinamite-toolkit/dinamite)**
+
+If you want to try out DINAMITE, click on [Quick Start](/quickstart/)
+and follow the instructions. **If you need help using DINAMITE feel
+free to [get in touch](/contact/)**
 
 
 **A typical DINAMITE workflow goes as follows:**

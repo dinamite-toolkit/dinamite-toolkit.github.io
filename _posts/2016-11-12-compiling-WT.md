@@ -161,7 +161,7 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
            finalize_command+=" $arg"
      fi
     ```
-    
+
     What is happening here is that
      libtool is trying to be smart and interpret the -load option to
      clang as a directive to link to liboad.so.  By inserting this
@@ -171,24 +171,37 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
 4. Now invoke the make command as follows:
 
     ```
-    INST_LIB=$LLVM_SOURCE/projects/dinamite/library DIN_FILTERS="/full/path/to/function_filter.json" make
+    INST_LIB=$LLVM_SOURCE/projects/dinamite/library
+    DIN_MAPS="/full/path/to/map/files/produced/by/compilation"
+    DIN_FILTERS="/full/path/to/function_filter.json" make
     ```
-    
-    The INST_LIB variable tells the compiler where the instrumentation library lives.
-    If you are using Docker, it's already properly set in your environment.
-    The DIN_FILTERS variable tells the instrumentation pass what to instrument. If you
-    don't provide the filters file, the compiler will insturment all function calls
-    and memory accesses in your program, which may not be what you want.
 
-    Here is the
-    contents of a ```function_filter.json``` file with reasonable defaults. With this
-    file, DINAMITE will instrument all functions whose critical path is at least 40
-    lines of code (LOC), where LOC does not include blank lines or comments and LOC
-    for loops are computed with the assumption that they execute once.
+    The INST_LIB variable tells the compiler where the instrumentation
+    library lives.  If you are using Docker, it's already properly set
+    in your environment.
+
+    DIN_MAPS tells DINAMITE where to put its "map" files. As DINAMITE
+    instruments the program it produces dictionary files that are
+    later used to covert binary traces to text. By setting DIN_MAPS
+    you are telling DINAMITE where to place these files. <b> You must
+    specify an absolute path for DIN_MAPS if you want to correctly
+    decode your traces.</b>
+
+    The DIN_FILTERS variable tells the instrumentation pass the
+    location of the instrumentation filter file.  That file controls
+    what to instrument. If you don't provide the filters file, the
+    compiler will insturment all function calls and memory accesses in
+    your program, which may not be what you want.
+
+    Here is the contents of a ```function_filter.json``` file with
+    reasonable defaults. With this file, DINAMITE will instrument all
+    functions whose critical path is at least 40 lines of code (LOC),
+    where LOC does not include blank lines or comments and LOC for
+    loops are computed with the assumption that they execute once.
 
     ```
      {
-         "minimum_function_size" : 50,
+         "minimum_function_size" : 40,
          "check_small_function_loops" : true,
          "function_size_metric" : "LOC_PATH",
          "whitelist": {
