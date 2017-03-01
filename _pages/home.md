@@ -29,8 +29,10 @@ sophisticated and [visually rich tools](/trace-analysis/). Or just use
 **DINAMITE LLVM compiler is available on [GitHub](https://github.com/dinamite-toolkit/dinamite)**
 
 If you want to try out DINAMITE, click on [Quick Start](/quickstart/)
-and follow the instructions. **If you need help using DINAMITE feel
-free to [get in touch](/contact/)**
+and follow the instructions. If you want to use it with a large
+complex code base, take a look at [Technical
+Articles](/tech-articles/).  **If you need help using DINAMITE please
+[get in touch](/contact/)**
 
 
 **A typical DINAMITE workflow goes as follows:**
@@ -43,11 +45,12 @@ free to [get in touch](/contact/)**
     see our page on [Logging libraries](user-guide/#logging-libraries)
 3. Execute the instrumented binary. The log files will be created in your file
 system or streamed over the network.
-4. Analyze traces using our tools, 3rd party tools or Unix data analytics tools.
+4. Analyze traces using [our tools](/trace-analysis/), 3rd party tools or Unix data analytics tools.
 
-**To get started** with a simple example, read the [Quick Start](/quickstart/) guide.
-For examples of using DINAMITE with complex systems, from integration into the
-build system to sophisticated trace analysis, check out
-[Technical Articles](/tech-articles/).
+**To get started** with a simple example, read the [Quick
+Start](/quickstart/) guide.  For examples of using DINAMITE with
+complex systems, from integration into the build system to
+sophisticated trace analysis, check out [Technical
+Articles](/tech-articles/).
 
 
