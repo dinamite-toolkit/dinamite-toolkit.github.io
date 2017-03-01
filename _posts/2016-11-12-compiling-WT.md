@@ -215,23 +215,24 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
     ```
 6. Next, run your program! If you run a command that uses the instrumented WiredTiger library, you need to provide the path for the instrumentation library. For example, suppose you run wtperf:
 
-        ```
-        LD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
-        ```
+    ```
+     LD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
+    ```
 
-        Or, if using a MacOS:
+    Or, if using a MacOS:
 
-        ```
-        DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
-        ```
+    ```
+     DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
+    ```
 
-        To tell the instrumentation library where to put the resulting performance traces,
-        that will be generated when your program runs, you can set the DINAMITE_TRACE_PREIX
-        variable to the desired location:
+    To tell the instrumentation library where to put the resulting
+        performance traces, that will be generated when your program
+        runs, you can set the DINAMITE_TRACE_PREIX variable to the
+        desired location:
 
-        ```
-        DINAMITE_TRACE_PREFIX=/path/to/traces DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
-        ```
+    ```
+     DINAMITE_TRACE_PREFIX=/path/to/traces DYLD_LIBRARY_PATH=$LLVM_SOURCE/projects/dinamite/library ./wtperf
+    ```
 
 That's it! Now watch your program run and generate traces.
 
