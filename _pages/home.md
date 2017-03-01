@@ -31,7 +31,7 @@ sophisticated and [visually rich tools](/trace-analysis/). Or just use
 If you want to try out DINAMITE, click on [Quick Start](/quickstart/)
 and follow the instructions. If you want to use it with a large
 complex code base, take a look at [Technical
-Articles](/tech-articles/).  **If you need help using DINAMITE please
+Articles](/tech-articles/index/).  **If you need help using DINAMITE please
 [get in touch](/contact/)**
 
 
@@ -51,6 +51,6 @@ system or streamed over the network.
 Start](/quickstart/) guide.  For examples of using DINAMITE with
 complex systems, from integration into the build system to
 sophisticated trace analysis, check out [Technical
-Articles](/tech-articles/).
+Articles](/tech-articles/index/).
 
 
