@@ -20,8 +20,9 @@ issues in RocksDB's repository:
 Here's what we did:
 
 *(This tutorial was tested on [DINAMITE's docker
-container](https://github.com/dinamite-toolkit/dinamite-compiler-docker). If any of the
-instructions do not work in your environment, please [contact us](/contact/).)*
+container](https://github.com/dinamite-toolkit/dinamite-compiler-docker). To set
+it up, follow our [Quick start guide](/quickstart). If any of the instructions
+do not work in your environment, please [contact us](/contact/).)*
 
 ## Setting up RocksDB
 
