@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Building Facebook's RocksDB using DINAMITE
+title: Compiling Facebook's RocksDB using DINAMITE
 excerpt_separator: <!--more-->
 ---
 
