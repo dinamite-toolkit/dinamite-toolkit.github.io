@@ -15,11 +15,10 @@ DINAMITE can be built only within the LLVM's source tree.
 
 A Docker container with LLVM and DINAMITE can be found
 [here](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git).
-Use the Dockerfile-wt docker file to prepare for building WiredTiger.
 
 If you don't like Docker or would like to install LLVM 3.5 and
 DINAMITE natively for other reasons, follow the steps to download the
-code outlined in the Dockerfile-wt found
+code outlined in the Dockerfile found
 [here](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git).
 Modify the steps for your OS and and then follow the build
 instructions on the [LLVM "Getting Started"
@@ -65,7 +64,7 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
  of LLVM from sources, download the instrumentation pass and the instrumentation
  library as follows:
 
-    ```
+    ```shell
     cd $LLVM_SOURCE/projects
     git clone https://github.com/dinamite-toolkit/dinamite.git
     ```
@@ -77,7 +76,7 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
  built for you**, so you may skip this step, unless you want to change the format
  of the traces.
  
-    ```
+    ```shell
      cd $LLVM_SOURCE/projects/dinamite/library
      make binary
      cd ../
