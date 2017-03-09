@@ -8,97 +8,41 @@ In this blog post we describe how we use DINAMITE to compiled RocksDB, an open
 source persistent key-value store developed by Facebook.
 <!--more-->
 
-## Environment
 
-You will need LLVM 3.5 is needed to build and use DINAMITE.
-DINAMITE can be built only within the LLVM's source tree.
-
-A Docker container with LLVM and DINAMITE can be found
-[here](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git).
-
-If you don't like Docker or would like to install LLVM 3.5 and
-DINAMITE natively for other reasons, follow the steps to download the
-code outlined in the Dockerfile found
-[here](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git).
-Modify the steps for your OS and and then follow the build
-instructions on the [LLVM "Getting Started"
-website](http://llvm.org/docs/GettingStarted.html#local-llvm-configuration).
-
-### MacOS note:
-
-We are investigating a strange anomaly on OS X, where the main
-compiler pass would only build with the built-in system clang or g++,
-while the instrumented programs would only build with the clang
-included in the LLVM distribution. To work around it, do the
-following:
-
-To build LLVM 3.5.0 natively on a MacOS, build and install clang as
-part of building the LLVM using cmake as explained on the LLVM's
-"Getting started" page:
- 
-    cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr/local
-
-Then, in the top-level directory of the LLVM source, run:
-
-    CXX=g++ ./configure
-
-This way, the instrumentation pass itself will be built using g++, but
-the instrumented programs will be built using the clang installed in
-`/usr/local`, provided that it is the default version that your system
-finds. If not, put `/usr/local` as the first item on your path.
-
-
-# Building the RocksDB
+# Building RocksDB
 
 Here is the [RocksDB Github Repo](https://github.com/facebook/rocksdb/) of
-RocksDB. If you have your `gcc` correctly set up, after cloning in the repo, a
-simple `make` instruction can build a ''normal'' version of RocksDB.
+RocksDB. If you have your `gcc` correctly set up, a
+simple `make static_lib db_bench` instruction in the root of the repo can build a ''normal'' version of RocksDB static library and some db_bench sample applications.
 
-In this article, we will refer to the root of your LLVM installation using the
-`$LLVM_SOURCE variable`. If you are using the [Docker container](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git), this variable is
-already set up for you; it would point to `/root/dinamite/llvm-3.5.0.src`. If you
-built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled sources are.
+## Build and Run With Docker
 
- 1. If you are using the [Docker container](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git)
- the compiler pass is already included and built, but if you built your own version
- of LLVM from sources, download the instrumentation pass and the instrumentation
- library as follows:
+ 1. A Docker container with LLVM and DINAMITE can be found [here](https://github.com/dinamite-toolkit/dinamite-compiler-docker.git). Run and setup the docker as suggested in the repo.
+
+ 2. In the docker command line, setting the following environment variables:
 
     ```shell
-    cd $LLVM_SOURCE/projects
-    git clone https://github.com/dinamite-toolkit/dinamite.git
-    ```
- 2. Build the instrumentation pass and the instrumentation library.
- We will build the version of the library that produces logs in a binary format,
- because this is a lot more efficient than generating text traces. But if you don't
- want to deal with converting binary traces to text just yet, replace `make binary`
- command below with `make text`. **If you are using Docker, the library is already
- built for you**, so you may skip this step, unless you want to change the format
- of the traces.
- 
-    ```shell
-     cd $LLVM_SOURCE/projects/dinamite/library
-     make binary
-     cd ../
-     make
+    export WORKING_DIR=/root/dinamite
+    export LLVM_SOURCE=$WORKING_DIR/llvm-3.5.0.src
+    export LLVM_BUILD=$WORKING_DIR/build
     ```
 
- 3. Clone the [RocksDB Github Repo](https://github.com/facebook/rocksdb/) to
- your working directory (We will assume $WORKING_DIR to be your working
- directory in later article). And do:
+ 3. Clone the RocksDB.
+
     ```shell
-     mkdir $WORKING_DIR/din_maps
-     mkdir $WORKING_DIR/din_traces
-     cd $WORKING_DIR/rocksdb
+    cd $WORKING_DIR
+    git clone https://github.com/facebook/rocksdb.git
+    cd rocksdb
+
     ```
- 
- 4. Set up environment variables for building RocksDB with DINAMITE.
+
+ 4. Set up environment variables for building RocksDB with DINAMITE
 
     ```shell
     # Variables for DINAMITE build:
-    export PATH="LLVM_SOURCE/../build/bin:$PATH"
-    export DIN_FILTERS="$LLVM_SOURCE/projects/dinamite/function_filter.json" 
-    export DIN_MAPS="$WORKING_DIR/din_maps"
+    export PATH="$LLVM_BUILD/bin:$PATH"
+    export DIN_FILTERS="$LLVM_SOURCE/projects/dinamite/function_filter.json" # default filter
+    export DIN_MAPS="$WORKING_DIR/din_maps" 
     export ALLOC_IN="$LLVM_SOURCE/projects/dinamite"
     export INST_LIB="$LLVM_SOURCE/projects/dinamite/library"
 
@@ -111,30 +55,27 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
     # Set up variables for runtime, can be set up later before running
     export DINAMITE_TRACE_PREFIX=$WORKING_DIR/din_traces
     export LD_LIBRARY_PATH=$INST_LIB
+
+    # Create directories if not exist:
+    mkdir $DIN_MAPS
+    mkdir $DINAMITE_TRACE_PREFIX
     ```
 
-    *Note*: If you are running on MacOS, please to the following changes:
+    **Note**: If you are running on MacOS, please do the following changes:
     
     ```shell
     export EXTRA_CFLAGS="-O3 -g -v -Xclang -load -Xclang $LLVM_SOURCE/Release+Asserts/lib/AccessInstrument.dylib"
     export DYLD_LIBRARY_PATH=$INST_LIB
     ```
-
-    DINAMITE build Variables explanation:
-
-        * `PATH` change is to make sure the correct clang++ is found
-        * `DIN_FILTERS` is a configuration file in json format indicating what get filtered out for injecting instrumentation code
-        * `DIN_MAPS` is the place where storing id to name maps, important for processing later traces        
-        * `ALLOC_IN` is a directory contains alloc.in, which let you specify your allocation function
-        * `INST_LIB` is the variable telling the runtime library DINAMITE uses for writing traces
-
+ 
  5. Build the RocksDB library and some sample applications.
 
     ```shell
-    make static_lib db_bench -j4 # assume your machine has 4 cores
+    make clean
+    make static_lib db_bench
     cd examples
     make clean
-    make -j4
+    make
     cd ..
     ```
  
@@ -144,6 +85,37 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
     cd examples
     ./simple_example
     ```
+
+
+## Build and Run in Your Own Environment
+
+If you don't like docker (don't worry, we have the same feeling), you can definitely build DINAMITE instrumented RocksDB in your own environment.
+
+ 1. Basically you need to (1) build your LLVM; (2) Place DINAMITE pass to the correct place; (3) Build DINAMITE pass and its runtime library.
+
+    You can copy the commands in the [Dockerfile](https://github.com/dinamite-toolkit/dinamite-compiler-docker/blob/master/Dockerfile) to apply them appropriately to your system. Details information is provided in the section *Environment* in another article [Compiling the WiredTiger key-value store using DINAMITE](https://dinamite-toolkit.github.io/2016/11/12/compiling-WT/).
+
+ 2. Make sure your are assigning those environment variables correctly:
+
+    ```shell
+    export WORKING_DIR="Your working directory, which will later contain rocksdb repo"
+    export LLVM_SOURCE="Your LLVM source base directory"
+    export LLVM_BUILD="The directory contains your LLVM build. This directory is supposed to have a directory called bin, which contains the clang/clang++ binary"
+    ```
+
+ 3. Do the same things starting from (including) Step 3 in section *Build and Run With Docker*.
+
+
+# Appendix
+
+## DINAMITE Variables Explanation:
+
+    * `DIN_FILTERS` is a configuration file in json format indicating what get filtered out for injecting instrumentation code
+    * `DIN_MAPS` is the place where storing id to name maps, important for processing later traces.
+    * `ALLOC_IN` is a directory contains alloc.in, which let you specify your allocation function
+    * `INST_LIB` is the variable telling the runtime library DINAMITE uses for writing traces
+
+
 
 If you run into trouble, get in touch. If you'd like to find out how to control what's instrumented, take a look at the
 [User Guide](/user-guide/). If you'd like to know **what to do with the traces** now that you have them,
