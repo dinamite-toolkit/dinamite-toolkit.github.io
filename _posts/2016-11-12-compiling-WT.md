@@ -37,13 +37,14 @@ following:
 To build LLVM 3.5.0 natively on a MacOS, build and install clang as
 part of building the LLVM using cmake as explained on the LLVM's
 "Getting started" page:
- 
+
+    ```
     cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr/local
-
+    ```
 Then, in the top-level directory of the LLVM source, run:
-
+    ```
     CXX=g++ ./configure
-
+    ```
 This way, the instrumentation pass itself will be built using g++, but
 the instrumented programs will be built using the clang installed in
 `/usr/local`, provided that it is the default version that your system
@@ -75,7 +76,7 @@ built the LLVM from sources, set `$LLVM_SOURCE` to wherever your compiled source
  command below with `make text`. **If you are using Docker, the library is already
  built for you**, so you may skip this step, unless you want to change the format
  of the traces.
- 
+
     ```
      cd $LLVM_SOURCE/projects/dinamite/library
      make binary

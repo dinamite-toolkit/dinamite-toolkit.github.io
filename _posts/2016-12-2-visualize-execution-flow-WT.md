@@ -30,7 +30,7 @@ processing script:
 To make sure the variable sticks around, add the directive to your shell resource
 file, such as ```.bashrc```.
 
-2. For convenience, put the traces as well as all the `map_*` files generated
+3. For convenience, put the traces as well as all the `map_*` files generated
 during the DINAMITE compilation into the working directory, where you will process
 the traces. Assuming your traces were placed into `/tmp` and you compiled the
 program in `$BUILD_DIR` directory, this will do the trick:
@@ -48,7 +48,7 @@ program in `$BUILD_DIR` directory, this will do the trick:
    They have nothing to do with `pthread` thread ids or with application-specific thread
    ids.
 
-3. Now you will need to run a Python script located in the DINAMITE binary trace
+4. Now you will need to run a Python script located in the DINAMITE binary trace
 parser, which you downloaded in Step 1. This script needs to know where the binary
 trace toolkit lives, so you need to set the environment variable
 `$DINAMITE_BINTRACE_TOOLKIT` to indicate its location as you invoke the script:
@@ -61,7 +61,7 @@ trace toolkit lives, so you need to set the environment variable
    Now sit back and relax or go get a coffee while the files are being processed.
    This might take a while depending on your traces sizes.
 
-4. Once the traces are processed, your directory will have a bunch of new files.
+5. Once the traces are processed, your directory will have a bunch of new files.
 For each binary `trace.bin.*` file there will be a corresponding `trace.bin.*.txt`.
 This file contains the text version of the trace. You can peek into those files to
 see all function names and timestamps. For example, you would see records like this:
