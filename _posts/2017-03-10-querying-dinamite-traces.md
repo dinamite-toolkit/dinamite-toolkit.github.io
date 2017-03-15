@@ -122,11 +122,11 @@ argument will give you the table's schema, for example:
    sql> \d trace
    ```
 
-Suppose now you wanted to list all "outlier" functions. You could accomplish
-this by typing the following SQL query:
+Suppose now you wanted to list all "outlier" functions, sorted by
+duration. You could accomplish this by typing the following SQL query:
 
    ```
-   sql> SELECT * from outliers;
+   sql> SELECT * FROM outliers ORDER BY duration DESC;
    ```
 
 Or if you wanted to display the first 10 entry records for functions that took
@@ -136,12 +136,32 @@ more than 60 milliseconds to run:
    sql> SELECT * FROM trace WHERE duration > 60000000 AND dir=0 LIMIT 10;
    ```
 
-That's a great start, but wouldn't it be nice to actually view the
-trace using some kind of UI? We have a tool just for that! Using the
-database, you can generate a file containing a portion of the trace,
-chosen according to your parameters. Then you can visualize that file
-in a browser using our tool TimeSquared. Read about it in our [next
-blog
+Now, suppose you wanted to see what happened during the execution
+while an particular unusually long function was running? You could list all
+events between the boundaries of the outlier function, sorted in the
+chronological order, via the following steps.
+
+   1. First, find the ID of the outlier function invocation you want
+   to examine using the `SELECT * FROM outliers ORDER BY duration
+   DESC;`, picking any function you like and noting its ID (the first
+   column). Suppose you picked a function invocation with the id 4096.
+
+   2. Run the following query to obtain all concurrent events:
+   ```
+   sql> WITH lowerboundtime AS
+   (SELECT time FROM trace WHERE id=4096 AND dir=0),
+   upperboundtime AS
+   (SELECT time FROM trace WHERE id=4096 and dir=1)
+   SELECT * FROM trace WHERE
+   time>= (SELECT * FROM lowerboundtime)
+   AND time <= (SELECT * FROM upperboundtime);
+   ```
+
+That query will probably give you a very large list of events -- so
+large that it's really inconvenient to look at it in a text form. To
+make viewing event traces more pleasant, we built a tool called
+TimeSquared. You can use it to view event traces generated from SQL
+queries. Read about it in our [next blog
 post](https://dinamite-toolkit.github.io/2017/03/10/time-squared-with-files)!
 
 
