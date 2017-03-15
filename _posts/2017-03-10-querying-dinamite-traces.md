@@ -165,4 +165,23 @@ TimeSquared. You can use it to view event traces generated from SQL
 queries. Read about it in our [next blog
 post](/2017/03/10/time-squared-with-files)!
 
+And before we finish this post, here is another very useful query that
+could help diagnose the root cause of an "outlier" function
+invocation. The following query will list all the children
+function-invocations of the long-lasting functions and sort them by
+duration. This way, you can quickly spot if there is a particular
+callee that is responsible for high latency in the parent. Again,
+assuming that you previously determined that the id of the
+long-lasting function equals to 4096 and the function was executed by
+the thread with tid=18, the query would look like:
 
+   ```
+   sql> WITH lowerboundtime AS
+   (SELECT time FROM trace WHERE id=4096 AND dir=0),
+   upperboundtime AS
+   (SELECT time FROM trace WHERE id=4096 and dir=1)
+   SELECT func, id, time, duration FROM trace WHERE
+   time>= (SELECT * FROM lowerboundtime)
+   AND time <= (SELECT * FROM upperboundtime)
+   AND tid=18  ORDER BY	duration DESC;
+   ```
