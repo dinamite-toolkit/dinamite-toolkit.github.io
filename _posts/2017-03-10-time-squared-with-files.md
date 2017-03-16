@@ -29,9 +29,9 @@ concurrent with the outlier function invocation to a file, like so:
    (SELECT time FROM trace WHERE id=4096 AND dir=0),
    upperboundtime AS
    (SELECT time FROM trace WHERE id=4096 and dir=1)
-   SELECT * FROM trace WHERE
-   time>= (SELECT * FROM lowerboundtime)
-   AND time <= (SELECT * FROM upperboundtime)
+   SELECT dir, func, tid, time FROM trace WHERE
+   time>= (SELECT time FROM lowerboundtime)
+   AND time <= (SELECT time FROM upperboundtime)
    INTO '/full/path/to/output/file'
    USING DELIMITERS ' ';
    ```
