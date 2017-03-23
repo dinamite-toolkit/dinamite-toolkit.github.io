@@ -21,7 +21,7 @@ If you don't like Docker we describe how to install LLVM 3.5 and
 DINAMITE from scratch.
 
 We describe the steps that we followed on a RedHat Fedora Linux system
-([Amazon LinuxAMI](https://aws.amazon.com/amazon-linux-ami/2016.09-release-notes/).
+[Amazon LinuxAMI](https://aws.amazon.com/amazon-linux-ami/2016.09-release-notes/).
 
 (We also sucessfully performed manual installation on OS X (Darwin). See a
 MacOS note at the end of the article.)
