@@ -139,13 +139,15 @@ compile with DINAMITE.
 
 **Your compiler complains that it cannot find gcc installation files**
 
-For exmaple:
+For example:
 
    ```shell
    /usr/bin/ld: cannot find crtbegin.o: No such file or directory
    ```
 
-In that case, you need to tell clang the path to your compiler
+This is a [known issue](http://stackoverflow.com/questions/4160262/clang-linker-problem) with LLVM 3.5.
+
+To work around it, you need to tell clang the path to your compiler
 installation. You can find where your gcc is installed by searching
 for the location of the missing file, e.g., `crtbegin.o`. For example
 if that location happened to be
