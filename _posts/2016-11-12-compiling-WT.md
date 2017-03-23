@@ -20,7 +20,7 @@ Use the Dockerfile-wt docker file to prepare for building WiredTiger.
 
 If you don't like Docker or would like to install LLVM 3.5 and
 DINAMITE natively for other reasons, follow the steps to download the
-code outlined in this [Dockerfile-wt](/assets/Dockerfile-wt).
+code outlined in this [Dockerfile-wt](/assets/Dockerfile-wt) file.
 Modify the steps for your OS and and then follow the build
 instructions on the [LLVM "Getting Started"
 website](http://llvm.org/docs/GettingStarted.html#local-llvm-configuration).
