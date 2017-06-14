@@ -28,6 +28,14 @@ sophisticated and [visually rich tools](/trace-analysis/). Or just use
 
 **DINAMITE LLVM compiler is available on [GitHub](https://github.com/dinamite-toolkit/dinamite)**
 
+The following interactive visualization tools are parts of DINAMITE's
+performance debugging ecosystem. Be sure to check them out!
+
+- [TSViz](https://bestchai.bitbucket.io/tsviz/?) generates interactive graphs
+    for visualizing communication between threads
+- [Timesquared](https://auggy.bitbucket.io/timesquared/) visualizes an annotated
+    time line of per-thread call stacks
+
 If you want to try out DINAMITE, click on [Quick Start](/quickstart/)
 and follow the instructions. If you want to use it with a large
 complex code base, take a look at [Technical
@@ -52,5 +60,8 @@ Start](/quickstart/) guide.  For examples of using DINAMITE with
 complex systems, from integration into the build system to
 sophisticated trace analysis, check out [Technical
 Articles](/tech-articles/index/).
+
+
+
 
 
