@@ -97,17 +97,14 @@ id | direction | function name | thread id | timestamp | duration
        same as the ID assigned to the thread by the thread library or
        by the operating system.
 	   
-   * **timestamp** is the timestamp. On OS X we use
-       `mach_absolute_time` to obtain the timestamp. On Linux we use
-       `clock_gettime(CLOCK_MONOTONIC)`. So the timestamp should be in
-       nanoseconds. On some OS X systems we observed that the
-       timestamp is not properly converted from clock ticks to
-       nanoseconds even when conversion using `mach_timebase_info` is
-       done.  In that case, the timestamp will be measured in units of
-       processor clock ticks.
+   * **timestamp** is the timestamp. We use the x86 `rdtsc` instruction to
+   obtain it. We used to use `clock_gettime` on Linux, but that generated a
+   tremendous amount of overhead for CPU-intensive workloads. So what you are
+   getting as a timestamp is measured in terms of CPU cycles. We currently do
+   not perform a conversion.
 
-   * **duration** is the duration of the function invocation measured
-       in the same time units as the timestamp.
+   * **duration** is the duration of the function invocation measured in the
+       same time units as the timestamp: CPU cycles.
 
 Instead of the `trace.sql` file, you can the script to create a single
 plain text file for each binary file by giving it a `-t` argument. In
