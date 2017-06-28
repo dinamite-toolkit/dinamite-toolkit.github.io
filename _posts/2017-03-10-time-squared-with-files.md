@@ -59,7 +59,7 @@ If your server ran successfully, you will see a message like this:
 
 Open your browser and type the following for the URL:
 
-   ``` localhost:3000```
+   ```localhost:3000```
 
 Click on the "Dashboard" button. You will see a textbox, where you can begin
 typing SQL queries to visualize parts of the trace.
